@@ -442,10 +442,12 @@ void ModManager::applyDepends() {
 		}
 
 		// skip the mod if it's incompatible with this engine version
+		/* ASN MOD
 		if (*mod_list[i].engine_min_version > VersionInfo::ENGINE || VersionInfo::ENGINE > *mod_list[i].engine_max_version) {
 			Utils::logError("ModManager: Tried to enable \"%s\", but failed. Not compatible with engine version %s.", mod_list[i].name.c_str(), VersionInfo::ENGINE.getString().c_str());
 			continue;
 		}
+		*/
 
 		// skip the mod if it's already in the new_mods list
 		if (std::find(new_mods.begin(), new_mods.end(), mod_list[i]) != new_mods.end()) {
@@ -471,11 +473,13 @@ void ModManager::applyDepends() {
 							depends_met = false;
 							break;
 						}
+						/* ASN MOD
 						else if (*new_depend.engine_min_version > VersionInfo::ENGINE || VersionInfo::ENGINE > *new_depend.engine_max_version) {
 							Utils::logError("ModManager: Tried to enable dependency \"%s\" for \"%s\", but failed. Not compatible with engine version %s.", new_depend.name.c_str(), mod_list[i].name.c_str(), VersionInfo::ENGINE.getString().c_str());
 							depends_met = false;
 							break;
 						}
+						*/
 						else if (*new_depend.version < *mod_list[i].depends_min[j] || *new_depend.version > *mod_list[i].depends_max[j]) {
 							Utils::logError("ModManager: Tried to enable dependency \"%s\" for \"%s\", but failed. Version \"%s\" is required, but only version \"%s\" is available.",
 									new_depend.name.c_str(),
