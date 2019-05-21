@@ -677,7 +677,7 @@ void LootManager::checkLootComponent(EventComponent* ec, FPoint *pos, std::vecto
 	// an item id of 0 means we should drop currency instead
 	if (ec->c == 0 || ec->c == eset->misc.currency_id) {
 		new_loot.item = eset->misc.currency_id;
-		new_loot.quantity = new_loot.quantity * (100 + pc->stats.get(Stats::CURRENCY_FIND)) / 100;
+		new_loot.quantity = new_loot.quantity *1000* (100 + pc->stats.get(Stats::CURRENCY_FIND)) / 100; // quantity of gold you recieve changed to x1000
 	}
 	else {
 		new_loot.item = ec->c;
