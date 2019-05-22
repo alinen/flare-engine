@@ -131,11 +131,11 @@ void Avatar::init() {
 
 	stats.hero = true;
 	stats.humanoid = true;
-	stats.level = 1;
-	stats.xp = 0;
+	stats.level = 1; //doesn't actually change starting level
+	stats.xp = 0; //can use xp to change level
 	for (size_t i = 0; i < eset->primary_stats.list.size(); ++i) {
-		stats.primary[i] = stats.primary_starting[i] = 1;
-		stats.primary_additional[i] = 0;
+		stats.primary[i] = stats.primary_starting[i] = 1; //use this to change attributes of startng character
+		stats.primary_additional[i] = 1;
 	}
 	stats.speed = 0.2f;
 	stats.recalc();
