@@ -5,6 +5,7 @@ Set (PACKAGE "FLARE")
 Set (VERSION "1.08")
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
+set(CMAKE_BUILD_TYPE Debug)
 
 # Default definitions
 if (NOT MSVC)
