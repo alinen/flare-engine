@@ -54,15 +54,15 @@ public:
 	void removeItem(int item_id);
 	void rewardItem(ItemStack istack);
 	void rewardCurrency(int amount);
-	void rewardXP(int amount, bool show_message);
+	// void rewardXP(int amount, bool show_message);
 	void restoreHPMP(const std::string& s);
 	bool checkAllRequirements(const EventComponent& ec);
 
 	std::queue<ItemStack> drop_stack;
 
-	float bonus_xp;		// Fractional XP points not yet awarded (e.g. killing 1 XP enemies with a +25% ring)
+	// float bonus_xp;		// Fractional XP points not yet awarded (e.g. killing 1 XP enemies with a +25% ring)
 
-	static const bool XP_SHOW_MSG = true;
+	// static const bool XP_SHOW_MSG = true;
 
 private:
 	StatusMap status;

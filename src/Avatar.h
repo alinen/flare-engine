@@ -133,7 +133,7 @@ public:
 	int current_power;
 	FPoint act_target;
 	bool drag_walking;
-	bool newLevelNotification;
+	//bool newLevelNotification;
 	bool respawn;
 	bool close_menus;
 	bool allow_movement;
@@ -147,4 +147,3 @@ public:
 };
 
 #endif
-

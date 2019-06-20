@@ -23,6 +23,7 @@ FLARE.  If not, see http://www.gnu.org/licenses/
  */
 
 #include "Avatar.h"
+#include "ChatBox.h"
 #include "EngineSettings.h"
 #include "FontEngine.h"
 #include "IconManager.h"
@@ -83,12 +84,13 @@ MenuManager::MenuManager()
 	, book(NULL)
 	, hp(NULL)
 	, mp(NULL)
-	, xp(NULL)
+//	, xp(NULL)
 	, mini(NULL)
 	, num_picker(NULL)
 	, enemy(NULL)
 	, vendor(NULL)
 	, talker(NULL)
+	, chat_box(NULL)
 	, exit(NULL)
 	, effects(NULL)
 	, stash(NULL)
@@ -100,13 +102,14 @@ MenuManager::MenuManager()
 
 	hp = new MenuStatBar("hp");
 	mp = new MenuStatBar("mp");
-	xp = new MenuStatBar("xp");
+	//xp = new MenuStatBar("xp");
 	effects = new MenuActiveEffects();
 	hudlog = new MenuHUDLog();
 	act = new MenuActionBar();
 	enemy = new MenuEnemy();
 	vendor = new MenuVendor();
 	talker = new MenuTalker();
+	chat_box = new ChatBox();
 	exit = new MenuExit();
 	mini = new MenuMiniMap();
 	chr = new MenuCharacter();
@@ -119,13 +122,14 @@ MenuManager::MenuManager()
 
 	menus.push_back(hp); // menus[0]
 	menus.push_back(mp); // menus[1]
-	menus.push_back(xp); // menus[2]
+	//menus.push_back(xp); // menus[2]
 	menus.push_back(effects); // menus[3]
 	menus.push_back(hudlog); // menus[4]
 	menus.push_back(act); // menus[5]
 	menus.push_back(enemy); // menus[6]
 	menus.push_back(vendor); // menus[7]
 	menus.push_back(talker); // menus[8]
+	menus.push_back(chat_box); //menu [8.5]
 	menus.push_back(exit); // menus[9]
 	menus.push_back(mini); // menus[10]
 	menus.push_back(chr); // menus[11]
@@ -278,14 +282,14 @@ void MenuManager::logic() {
 
 	hp->update(0, pc->stats.hp, pc->stats.get(Stats::HP_MAX));
 	mp->update(0, pc->stats.mp, pc->stats.get(Stats::MP_MAX));
-
-	if (pc->stats.level == eset->xp.getMaxLevel()) {
-		xp->setCustomString(msg->get("XP: %d", pc->stats.xp));
-	}
-	else {
-		xp->setCustomString(msg->get("XP: %d/%d", pc->stats.xp, eset->xp.getLevelXP(pc->stats.level + 1)));
-	}
-	xp->update(eset->xp.getLevelXP(pc->stats.level), pc->stats.xp, eset->xp.getLevelXP(pc->stats.level + 1));
+	//
+	// if (pc->stats.level == eset->xp.getMaxLevel()) {
+	// 	xp->setCustomString(msg->get("XP: %d", pc->stats.xp));
+	// }
+	// else {
+	// 	xp->setCustomString(msg->get("XP: %d/%d", pc->stats.xp, eset->xp.getLevelXP(pc->stats.level + 1)));
+	// }
+	// xp->update(eset->xp.getLevelXP(pc->stats.level), pc->stats.xp, eset->xp.getLevelXP(pc->stats.level + 1));
 
 	// when selecting item quantities, don't process other menus
 	if (num_picker->visible) {
@@ -359,6 +363,7 @@ void MenuManager::logic() {
 	pow->logic();
 	questlog->logic();
 	talker->logic();
+	chat_box->logic();
 	stash->logic();
 
 	if (settings->dev_mode) {
@@ -535,7 +540,7 @@ void MenuManager::logic() {
 	}
 
 	bool console_open = settings->dev_mode && devconsole->visible;
-	menus_open = (inv->visible || pow->visible || chr->visible || questlog->visible || vendor->visible || talker->visible || book->visible || console_open);
+	menus_open = (inv->visible || pow->visible || chr->visible || questlog->visible || vendor->visible || talker->visible ||chat_box->visible || book->visible || console_open);
 	pause = (eset->misc.menus_pause && menus_open) || exit->visible || console_open || book->visible;
 
 	touch_controls->visible = !menus_open && !exit->visible;
@@ -568,6 +573,10 @@ void MenuManager::logic() {
 
 			// other menus
 			else if (talker->visible && Utils::isWithinRect(talker->window_area, inpt->mouse)) {
+				inpt->lock[Input::MAIN2] = true;
+				inpt->pressing[Input::MAIN2] = false;
+			}
+			else if (chat_box->visible && Utils::isWithinRect(chat_box->window_area, inpt->mouse)) {
 				inpt->lock[Input::MAIN2] = true;
 				inpt->pressing[Input::MAIN2] = false;
 			}
@@ -1210,6 +1219,9 @@ void MenuManager::render() {
 	if (talker->visible && Utils::rectsOverlap(hudlog->window_area, talker->window_area)) {
 		hudlog_overlapped = true;
 	}
+	if (chat_box->visible && Utils::rectsOverlap(hudlog->window_area, chat_box->window_area)) {
+		hudlog_overlapped = true;
+	}
 
 	for (size_t i=0; i<menus.size(); i++) {
 		if (menus[i] == hudlog && hudlog_overlapped && !hudlog->hide_overlay) {
@@ -1387,7 +1399,7 @@ MenuManager::~MenuManager() {
 
 	delete hp;
 	delete mp;
-	delete xp;
+//	delete xp;
 	delete mini;
 	delete inv;
 	delete pow;
@@ -1397,6 +1409,7 @@ MenuManager::~MenuManager() {
 	delete act;
 	delete vendor;
 	delete talker;
+	delete chat_box;
 	delete exit;
 	delete enemy;
 	delete effects;

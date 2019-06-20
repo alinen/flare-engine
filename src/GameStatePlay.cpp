@@ -110,6 +110,7 @@ GameStatePlay::GameStatePlay()
 	loadTitles();
 
 	refreshWidgets();
+
 }
 
 void GameStatePlay::refreshWidgets() {
@@ -645,10 +646,10 @@ void GameStatePlay::checkUsedItems() {
  * Marks the menu if it needs attention.
  */
 void GameStatePlay::checkNotifications() {
-	if (pc->newLevelNotification || menu->chr->getUnspent() > 0) {
-		pc->newLevelNotification = false;
-		menu->act->requires_attention[MenuActionBar::MENU_CHARACTER] = !menu->chr->visible;
-	}
+	// if (pc->newLevelNotification || menu->chr->getUnspent() > 0) {
+	// 	pc->newLevelNotification = false;
+	// 	menu->act->requires_attention[MenuActionBar::MENU_CHARACTER] = !menu->chr->visible;
+	// }
 	if (menu->pow->newPowerNotification) {
 		menu->pow->newPowerNotification = false;
 		menu->act->requires_attention[MenuActionBar::MENU_POWERS] = !menu->pow->visible;
@@ -844,6 +845,7 @@ void GameStatePlay::logic() {
 	checkCutscene();
 
 	// check menus first (top layer gets mouse click priority)
+	//menu->talker->visible = true;
 	menu->logic();
 
 	if (!isPaused()) {
@@ -881,7 +883,7 @@ void GameStatePlay::logic() {
 		enemym->logic();
 		hazards->logic();
 		loot->logic();
-		enemym->checkEnemiesforXP();
+		// enemym->checkEnemiesforXP();
 		npcs->logic();
 
 		snd->logic(pc->stats.pos);
@@ -1056,6 +1058,7 @@ void GameStatePlay::resetNPC() {
 	menu->talker->npc_from_map = true;
 	menu->vendor->setNPC(NULL);
 	menu->talker->setNPC(NULL);
+
 }
 
 bool GameStatePlay::checkPrimaryStat(const std::string& first, const std::string& second) {
@@ -1124,4 +1127,3 @@ GameStatePlay::~GameStatePlay() {
 	menu_powers = NULL;
 	powers = NULL;
 }
-

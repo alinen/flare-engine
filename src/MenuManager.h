@@ -28,6 +28,7 @@ FLARE.  If not, see http://www.gnu.org/licenses/
 #include "CommonIncludes.h"
 #include "ItemManager.h"
 
+class ChatBox;
 class Menu;
 class MenuInventory;
 class MenuPowers;
@@ -108,12 +109,13 @@ public:
 	MenuBook *book;
 	MenuStatBar *hp;
 	MenuStatBar *mp;
-	MenuStatBar *xp;
+	//MenuStatBar *xp;
 	MenuMiniMap *mini;
 	MenuNumPicker *num_picker;
 	MenuEnemy *enemy;
 	MenuVendor *vendor;
 	MenuTalker *talker;
+	ChatBox *chat_box;
 	MenuExit *exit;
 	MenuActiveEffects *effects;
 	MenuStash *stash;

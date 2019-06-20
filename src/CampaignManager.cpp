@@ -38,8 +38,7 @@ FLARE.  If not, see http://www.gnu.org/licenses/
 #include "StatBlock.h"
 #include "UtilsParsing.h"
 
-CampaignManager::CampaignManager()
-	: bonus_xp(0.0) {
+CampaignManager::CampaignManager(){
 }
 
 StatusID CampaignManager::registerStatus(const std::string& s) {
@@ -187,13 +186,13 @@ void CampaignManager::rewardCurrency(int amount) {
 	rewardItem(stack);
 }
 
-void CampaignManager::rewardXP(int amount, bool show_message) {
-	bonus_xp += (static_cast<float>(amount) * (100.0f + static_cast<float>(pc->stats.get(Stats::XP_GAIN)))) / 100.0f;
-	pc->stats.addXP(static_cast<int>(bonus_xp));
-	bonus_xp -= static_cast<float>(static_cast<int>(bonus_xp));
-	pc->stats.refresh_stats = true;
-	if (show_message) pc->logMsg(msg->get("You receive %d XP.", amount), Avatar::MSG_UNIQUE);
-}
+// void CampaignManager::rewardXP(int amount, bool show_message) {
+// 	bonus_xp += (static_cast<float>(amount) * (100.0f + static_cast<float>(pc->stats.get(Stats::XP_GAIN)))) / 100.0f;
+// 	pc->stats.addXP(static_cast<int>(bonus_xp));
+// 	bonus_xp -= static_cast<float>(static_cast<int>(bonus_xp));
+// 	pc->stats.refresh_stats = true;
+// 	if (show_message) pc->logMsg(msg->get("You receive %d XP.", amount), Avatar::MSG_UNIQUE);
+// }
 
 void CampaignManager::restoreHPMP(const std::string& s) {
 	if (s == "hp") {

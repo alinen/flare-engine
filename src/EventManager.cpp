@@ -499,12 +499,12 @@ bool EventManager::loadEventComponentString(std::string &key, std::string &val, 
 			}
 		}
 	}
-	else if (key == "reward_xp") {
-		// @ATTR event.reward_xp|int|Reward hero with specified amount of experience points.
-		e->type = EventComponent::REWARD_XP;
-
-		e->x = std::max(Parse::toInt(val), 0);
-	}
+	// else if (key == "reward_xp") {
+	// 	// @ATTR event.reward_xp|int|Reward hero with specified amount of experience points.
+	// 	e->type = EventComponent::REWARD_XP;
+	//
+	// 	e->x = std::max(Parse::toInt(val), 0);
+	// }
 	else if (key == "reward_currency") {
 		// @ATTR event.reward_currency|int|Reward hero with specified amount of currency.
 		e->type = EventComponent::REWARD_CURRENCY;
@@ -815,9 +815,9 @@ bool EventManager::executeEventInternal(Event &ev, bool skip_delay) {
 		else if (ec->type == EventComponent::REMOVE_ITEM) {
 			camp->removeItem(ec->x);
 		}
-		else if (ec->type == EventComponent::REWARD_XP) {
-			camp->rewardXP(ec->x, CampaignManager::XP_SHOW_MSG);
-		}
+		// else if (ec->type == EventComponent::REWARD_XP) {
+		// 	camp->rewardXP(ec->x, CampaignManager::XP_SHOW_MSG);
+		// }
 		else if (ec->type == EventComponent::REWARD_CURRENCY) {
 			camp->rewardCurrency(ec->x);
 		}

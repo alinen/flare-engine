@@ -127,12 +127,12 @@ void Avatar::init() {
 		stats.pos.y = mapr->hero_pos.y;
 	}
 	current_power = 0;
-	newLevelNotification = false;
+	//newLevelNotification = false;
 
 	stats.hero = true;
 	stats.humanoid = true;
-	stats.level = 1; //doesn't actually change starting level
-	stats.xp = 0; //can use xp to change level
+	//stats.level = 1; //doesn't actually change starting level
+//	stats.xp = 0; //can use xp to change level
 	for (size_t i = 0; i < eset->primary_stats.list.size(); ++i) {
 		stats.primary[i] = stats.primary_starting[i] = 1; //use this to change attributes of startng character
 		stats.primary_additional[i] = 1;
@@ -359,25 +359,25 @@ void Avatar::logic(std::vector<ActionData> &action_queue, bool restrict_power_us
 
 	stats.logic();
 
-	// check level up
-	if (stats.level < eset->xp.getMaxLevel() && stats.xp >= eset->xp.getLevelXP(stats.level + 1)) {
-		stats.level_up = true;
-		stats.level++;
-		std::stringstream ss;
-		ss << msg->get("Congratulations, you have reached level %d!", stats.level);
-		if (stats.level < stats.max_spendable_stat_points) {
-			ss << " " << msg->get("You may increase one attribute through the Character Menu.");
-			newLevelNotification = true;
-		}
-		logMsg(ss.str(), MSG_NORMAL);
-		stats.recalc();
-		snd->play(sound_levelup, snd->DEFAULT_CHANNEL, snd->NO_POS, !snd->LOOP);
-
-		// if the player managed to level up while dead (e.g. via a bleeding creature), restore to life
-		if (stats.cur_state == StatBlock::AVATAR_DEAD) {
-			stats.cur_state = StatBlock::AVATAR_STANCE;
-		}
-	}
+	// // check level up
+	// if (stats.level < eset->xp.getMaxLevel() && stats.xp >= eset->xp.getLevelXP(stats.level + 1)) {
+	// 	stats.level_up = true;
+	// 	stats.level++;
+	// 	std::stringstream ss;
+	// 	ss << msg->get("Congratulations, you have reached level %d!", stats.level);
+	// 	if (stats.level < stats.max_spendable_stat_points) {
+	// 		ss << " " << msg->get("You may increase one attribute through the Character Menu.");
+	// 		newLevelNotification = true;
+	// 	}
+	// 	logMsg(ss.str(), MSG_NORMAL);
+	// 	stats.recalc();
+	// 	snd->play(sound_levelup, snd->DEFAULT_CHANNEL, snd->NO_POS, !snd->LOOP);
+	//
+	// 	// if the player managed to level up while dead (e.g. via a bleeding creature), restore to life
+	// 	if (stats.cur_state == StatBlock::AVATAR_DEAD) {
+	// 		stats.cur_state = StatBlock::AVATAR_STANCE;
+	// 	}
+	// }
 
 	// assist mouse movement
 	if (!inpt->pressing[Input::MAIN2]) {

@@ -89,7 +89,7 @@ GameStateNew::GameStateNew()
 
 	// set up labels
 	label_portrait = new WidgetLabel();
-	label_portrait->setText(msg->get("Choose a Portrait"));
+	label_portrait->setText(msg->get("Choose a Character"));
 	label_portrait->setColor(font->getColor(FontEngine::COLOR_MENU_NORMAL));
 
 	label_name = new WidgetLabel();

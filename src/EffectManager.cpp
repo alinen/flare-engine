@@ -642,5 +642,5 @@ float EffectManager::getAttackSpeed(const std::string& anim_name) {
 		}
 	}
 
-	return attack_speed*100; //increase this to change attack speed
+	return attack_speed; //increase this to change attack speed
 }

@@ -299,7 +299,7 @@ void LootManager::checkLoot(std::vector<EventComponent> &loot_table, FPoint *pos
 		int real_chance = ec->z;
 
 		if (ec->c != 0 && ec->c != eset->misc.currency_id) {
-			real_chance = static_cast<int>(static_cast<float>(ec->z) * static_cast<float>(pc->stats.get(Stats::ITEM_FIND) + 100));// / 100.f);
+			real_chance = static_cast<int>(static_cast<float>(ec->z) * static_cast<float>(pc->stats.get(Stats::ITEM_FIND) + 100) / 100.f);
 		}
 
 		if (real_chance >= chance) {
@@ -677,7 +677,7 @@ void LootManager::checkLootComponent(EventComponent* ec, FPoint *pos, std::vecto
 	// an item id of 0 means we should drop currency instead
 	if (ec->c == 0 || ec->c == eset->misc.currency_id) {
 		new_loot.item = eset->misc.currency_id;
-		new_loot.quantity = new_loot.quantity *1000* (100 + pc->stats.get(Stats::CURRENCY_FIND)) / 100; // quantity of gold you recieve changed to x1000
+		new_loot.quantity = new_loot.quantity *(100 + pc->stats.get(Stats::CURRENCY_FIND)) / 100; // changes quantity of gold
 	}
 	else {
 		new_loot.item = ec->c;

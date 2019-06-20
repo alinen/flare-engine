@@ -200,7 +200,7 @@ void MenuTalker::logic() {
 	else {
 		textbox->logic();
 
-		Point mouse = textbox->input_assist(inpt->mouse);
+		Point mouse = textbox->input_assist(inpt->mouse); //mouse input
 		for (size_t i = 0; i < actions.size(); ++i) {
 			if (actions[i].btn->checkClickAt(mouse.x, mouse.y)) {
 				executeAction(i);
@@ -314,7 +314,7 @@ void MenuTalker::createBuffer() {
 }
 
 void MenuTalker::render() {
-	if (!visible) return;
+	 if (!visible) return;
 	Rect src;
 	Rect dest;
 

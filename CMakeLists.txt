@@ -105,6 +105,9 @@ Set (FLARE_SOURCES
 	./src/Avatar.cpp
 	./src/BehaviorStandard.cpp
 	./src/CampaignManager.cpp
+  ./src/ChatBox.cpp
+  ./src/ChatClient.cpp
+  ./src/ChatManager.cpp
 	./src/CombatText.cpp
 	./src/CursorManager.cpp
 	./src/DeviceList.cpp
@@ -217,6 +220,9 @@ Set (FLARE_HEADERS
 	./src/Avatar.h
 	./src/BehaviorStandard.h
 	./src/CampaignManager.h
+  ./src/ChatBox.h
+  ./src/ChatClient.h
+  ./src/ChatManager.h
 	./src/CombatText.h
 	./src/CommonIncludes.h
 	./src/CursorManager.h
@@ -327,6 +333,7 @@ IF (WIN32)
 ENDIF (WIN32)
 
 Add_Executable (flare ${FLARE_SOURCES} ${FLARE_HEADERS})
+Add_Executable (chattest ./src/ChatManager.cpp ./src/ChatManager.h ./src/ChatMain.cpp ./src/ChatClient.h ./src/ChatClient.cpp)
 
 # libSDLMain comes with libSDL if needed on certain platforms
 If (NOT SDL2MAIN_LIBRARY)
