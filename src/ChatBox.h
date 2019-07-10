@@ -64,6 +64,8 @@ private:
 	Color trade_color_hover;
 	Color trade_color_pressed;
 
+	std::vector<std::string> input_lines;
+
 public:
 	explicit ChatBox();
 	~ChatBox();

@@ -108,8 +108,8 @@ ChatBox::ChatBox()
 	label_name->setFont(font_who);
 	input_name = new WidgetInput(WidgetInput::DEFAULT_FILE);
 	input_name->max_length = 20;
-
-	textbox = new WidgetScrollBox(text_pos.w, text_pos.h-(text_offset.y*2));
+	input_name->setBasePos(text_pos.x, text_pos.y + text_offset.y, Utils::ALIGN_BOTTOMLEFT);
+	textbox = new WidgetScrollBox(text_pos.w, 1000);//text_pos.h-(text_offset.y*2));
 	textbox->setBasePos(text_pos.x, text_pos.y + text_offset.y, Utils::ALIGN_TOPLEFT);
 	align();
 }
@@ -118,7 +118,7 @@ void ChatBox::align() {
 	Menu::align();
 
 	label_name->setPos(window_area.x, window_area.y);
-	std::cout << window_area.x << " " << window_area.y << " " << window_area.h << " " << window_area.w << std::endl;
+	//std::cout << window_area.x << " " << window_area.y << " " << window_area.h << " " << window_area.w << std::endl;
 	textbox->setPos(window_area.x, window_area.y + label_name->getBounds()->h);
 	textbox->pos.h = text_pos.h - (text_offset.y*2);
 	input_name->setPos(window_area.x, window_area.y + label_name->getBounds()->h + text_pos.h);
@@ -128,25 +128,38 @@ void ChatBox::align() {
  * Menu interaction (enter/space/click to continue) -----------------------
  */
 void ChatBox::logic() {
-	tablist.logic();
-	input_name->logic();
+	// tablist.logic();
+	if (!input_name->edit_mode){
+		tablist.logic();
+	}
+ 	input_name->logic();
+	if (inpt->pressing[Input::ACCEPT] && !inpt->lock[Input::ACCEPT]){
+		inpt->lock[Input::ACCEPT] = true;
+		//std::cout << input_name->getText() << std::endl;
+		input_lines.push_back(input_name->getText());
+		//confirm_clicked = true;
+	}
 	chatrender();
 }
 
 
 void ChatBox::chatrender(){
-	ChatClient client1(1,"Player_1",&mgr);
-	std::string line2 = client1.postMessage("Hi");
-	Point line_size = font->calc_size(line2,textbox->pos.w-(text_offset.x*2));
-	font->render(
-		line2,
-		text_offset.x,
-		0,
-		FontEngine::JUSTIFY_LEFT,
-		textbox->contents->getGraphics(),
-		text_pos.w - text_offset.x*2,
-		font->getColor(FontEngine::COLOR_MENU_NORMAL)
-	);
+
+	int y = 0;
+	for (int i = 0; i < input_lines.size(); i++)
+	{
+		Point line_size = font->calc_size(input_lines[i],textbox->pos.w-(text_offset.x*2));
+		font->render(
+			input_lines[i],
+			text_offset.x,
+			y,
+			FontEngine::JUSTIFY_LEFT,
+			textbox->contents->getGraphics(),
+			text_pos.w - text_offset.x*2,
+			font->getColor(FontEngine::COLOR_MENU_NORMAL)
+		);
+		y = y + line_size.y;
+  }
 	align();
 
 }
@@ -175,6 +188,9 @@ void ChatBox::render() {
 	// name & dialog text
 	label_name->render();
 	input_name->render();
+	if (textbox->update){
+		textbox->refresh();
+	}
 	textbox->render();
 
 //	WidgetInput.loadGraphics();
