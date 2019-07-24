@@ -31,8 +31,8 @@ FLARE.  If not, see http://www.gnu.org/licenses/
 #include "MenuInventory.h"
 #include "MenuManager.h"
 #include "ChatBox.h"
-#include "ChatClient.h"
-#include "ChatManager.h"
+//#include "ChatClient.h"
+//#include "ChatManager.h"
 #include "GetText.h"
 #include "MenuVendor.h"
 #include "MessageEngine.h"
@@ -109,7 +109,7 @@ ChatBox::ChatBox()
 	input_name = new WidgetInput(WidgetInput::DEFAULT_FILE);
 	input_name->max_length = 20;
 	input_name->setBasePos(text_pos.x, text_pos.y + text_offset.y, Utils::ALIGN_BOTTOMLEFT);
-	textbox = new WidgetScrollBox(text_pos.w, 1000);//text_pos.h-(text_offset.y*2));
+	textbox = new WidgetScrollBox(text_pos.w, 500);//text_pos.h-(text_offset.y*2));
 	textbox->setBasePos(text_pos.x, text_pos.y + text_offset.y, Utils::ALIGN_TOPLEFT);
 	align();
 }

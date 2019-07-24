@@ -1,7 +1,21 @@
-
+#include <assert.h>
+#include <stdio.h>
+#include <stdarg.h>
+#include <string.h>
+#include <algorithm>
 #include <string>
+#include <random>
+#include <chrono>
+#include <thread>
+#include <mutex>
+#include <queue>
+#include <map>
+#include <cctype>
+#include <boost/algorithm/string.hpp>
+
 #include "ChatManager.h"
 #include "ChatClient.h"
+
 
 int main(){
 

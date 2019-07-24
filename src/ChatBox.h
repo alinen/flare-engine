@@ -33,8 +33,8 @@ FLARE.  If not, see http://www.gnu.org/licenses/
 #include "WidgetScrollBar.h"
 #include "WidgetScrollBox.h"
 #include "WidgetInput.h"
-class ChatClient;
-class ChatManager;
+//class ChatClient;
+//class ChatManager;
 class WidgetButton;
 class WidgetLabel;
 class WidgetScrollBox;
@@ -76,7 +76,7 @@ public:
 	void render();
 	void chatrender();
 
-  ChatManager mgr;
+  //ChatManager mgr;
 
 };
 

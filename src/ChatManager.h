@@ -7,7 +7,7 @@
 
 class ChatClient;
 
-class ChatManager {
+class ChatManager{
 public:
   ChatManager();
   ~ChatManager();

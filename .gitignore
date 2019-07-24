@@ -11,6 +11,7 @@ ipch
 /build-release/
 /config/
 /saves/
+GameNetworkingSockets
 # ignore also vim swap files
 .*.sw*
 /flare.desktop

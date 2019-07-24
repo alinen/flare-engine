@@ -6,6 +6,7 @@ Set (VERSION "1.08")
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 set(CMAKE_BUILD_TYPE Debug)
+set (CMAKE_CXX_STANDARD 11)
 
 # Default definitions
 if (NOT MSVC)
@@ -91,6 +92,9 @@ Else (NOT SDL2TTF_FOUND)
 	INCLUDE_DIRECTORIES(${SDL2TTF_INCLUDE_DIR})
 EndIf (NOT SDL2TTF_FOUND)
 
+INCLUDE_DIRECTORIES(/home/klima1/Summer2019Research/Flare/flare-engine/GameNetworkingSockets/include)
+add_definitions(-DGNUC -DGNU_COMPILER -DLINUX -DPOSIX)
+#set(CMAKE_CXX_FLAGS "-rpath,/home/klima1/Summer2019Research/Flare/flare-engine/GameNetworkingSockets/build/src")
 
 # Sources
 
@@ -106,8 +110,6 @@ Set (FLARE_SOURCES
 	./src/BehaviorStandard.cpp
 	./src/CampaignManager.cpp
   ./src/ChatBox.cpp
-  ./src/ChatClient.cpp
-  ./src/ChatManager.cpp
 	./src/CombatText.cpp
 	./src/CursorManager.cpp
 	./src/DeviceList.cpp
@@ -335,13 +337,15 @@ ENDIF (WIN32)
 Add_Executable (flare ${FLARE_SOURCES} ${FLARE_HEADERS})
 Add_Executable (chattest ./src/ChatManager.cpp ./src/ChatManager.h ./src/ChatMain.cpp ./src/ChatClient.h ./src/ChatClient.cpp)
 
+
 # libSDLMain comes with libSDL if needed on certain platforms
 If (NOT SDL2MAIN_LIBRARY)
   Set (SDL2MAIN_LIBRARY "")
 EndIf (NOT SDL2MAIN_LIBRARY)
 
 Target_Link_Libraries (flare ${CMAKE_LD_FLAGS} ${SDL2_LIBRARY} ${SDL2IMAGE_LIBRARY} ${SDL2MIXER_LIBRARY} ${SDL2TTF_LIBRARY} ${SDL2MAIN_LIBRARY})
-
+Target_Link_Libraries(chattest /home/klima1/Summer2019Research/Flare/flare-engine/GameNetworkingSockets/lib/libGameNetworkingSockets.so  /usr/lib/x86_64-linux-gnu/libprotobuf.so -lpthread /usr/lib/x86_64-linux-gnu/libcrypto.so
+)
 
 # installing to the proper places
 install(PROGRAMS

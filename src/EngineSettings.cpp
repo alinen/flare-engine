@@ -44,7 +44,7 @@ void EngineSettings::load() {
 	loot.load(); // depends on misc
 	tileset.load();
 	widgets.load();
-	xp.load();
+//	xp.load();
 }
 
 void EngineSettings::Misc::load() {
@@ -515,9 +515,14 @@ void EngineSettings::HeroClasses::load() {
 				else if (infile.key == "powers") {
 					// @ATTR powers|list(power_id)|A list of powers that are unlocked when starting this class.
 					std::string power;
-					while ( (power = Parse::popFirstString(infile.val)) != "") {
-						list.back().powers.push_back(Parse::toInt(power));
-					}
+					std::string power2;
+					std::string power3;
+					std::string power4;
+					std::string power5;
+					// while ( (power = Parse::popFirstString(infile.val)) != "") {
+					// 	list.back().powers.push_back(Parse::toInt(power));
+					// }
+					list.back().powers.push_back(10);
 				}
 				else if (infile.key == "campaign") {
 					// @ATTR campaign|list(string)|A list of campaign statuses that are set when starting this class.
@@ -626,7 +631,7 @@ void EngineSettings::DeathPenalty::load() {
 	// reset to defaults
 	enabled = true;
 	permadeath = false;
-	currency = 50;
+	currency = 0;
 	xp = 0;
 	xp_current = 0;
 	item = false;
