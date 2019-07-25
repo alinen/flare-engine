@@ -110,6 +110,7 @@ Set (FLARE_SOURCES
 	./src/BehaviorStandard.cpp
 	./src/CampaignManager.cpp
   ./src/ChatBox.cpp
+  ./src/ChatClient.cpp
 	./src/CombatText.cpp
 	./src/CursorManager.cpp
 	./src/DeviceList.cpp
@@ -224,7 +225,6 @@ Set (FLARE_HEADERS
 	./src/CampaignManager.h
   ./src/ChatBox.h
   ./src/ChatClient.h
-  ./src/ChatManager.h
 	./src/CombatText.h
 	./src/CommonIncludes.h
 	./src/CursorManager.h
@@ -335,7 +335,7 @@ IF (WIN32)
 ENDIF (WIN32)
 
 Add_Executable (flare ${FLARE_SOURCES} ${FLARE_HEADERS})
-Add_Executable (chattest ./src/ChatManager.cpp ./src/ChatManager.h ./src/ChatMain.cpp ./src/ChatClient.h ./src/ChatClient.cpp)
+Add_Executable (chattest  ./src/ChatMain.cpp ./src/ChatClient.h ./src/ChatClient.cpp)
 
 
 # libSDLMain comes with libSDL if needed on certain platforms
@@ -343,7 +343,7 @@ If (NOT SDL2MAIN_LIBRARY)
   Set (SDL2MAIN_LIBRARY "")
 EndIf (NOT SDL2MAIN_LIBRARY)
 
-Target_Link_Libraries (flare ${CMAKE_LD_FLAGS} ${SDL2_LIBRARY} ${SDL2IMAGE_LIBRARY} ${SDL2MIXER_LIBRARY} ${SDL2TTF_LIBRARY} ${SDL2MAIN_LIBRARY})
+Target_Link_Libraries (flare ${CMAKE_LD_FLAGS} ${SDL2_LIBRARY} ${SDL2IMAGE_LIBRARY} ${SDL2MIXER_LIBRARY} ${SDL2TTF_LIBRARY} ${SDL2MAIN_LIBRARY} /home/klima1/Summer2019Research/Flare/flare-engine/GameNetworkingSockets/lib/libGameNetworkingSockets.so  /usr/lib/x86_64-linux-gnu/libprotobuf.so -lpthread /usr/lib/x86_64-linux-gnu/libcrypto.so)
 Target_Link_Libraries(chattest /home/klima1/Summer2019Research/Flare/flare-engine/GameNetworkingSockets/lib/libGameNetworkingSockets.so  /usr/lib/x86_64-linux-gnu/libprotobuf.so -lpthread /usr/lib/x86_64-linux-gnu/libcrypto.so
 )
 
