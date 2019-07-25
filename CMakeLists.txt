@@ -92,9 +92,14 @@ Else (NOT SDL2TTF_FOUND)
 	INCLUDE_DIRECTORIES(${SDL2TTF_INCLUDE_DIR})
 EndIf (NOT SDL2TTF_FOUND)
 
-INCLUDE_DIRECTORIES(/home/klima1/Summer2019Research/Flare/flare-engine/GameNetworkingSockets/include)
-add_definitions(-DGNUC -DGNU_COMPILER -DLINUX -DPOSIX)
-#set(CMAKE_CXX_FLAGS "-rpath,/home/klima1/Summer2019Research/Flare/flare-engine/GameNetworkingSockets/build/src")
+INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/GameNetworkingSockets/include)
+Add_Definitions(-DGNUC -DGNU_COMPILER -DLINUX -DPOSIX)
+Set (NETWORK_LIBRARIES 
+   ${CMAKE_SOURCE_DIR}/GameNetworkingSockets/build/src/libGameNetworkingSockets.so  
+   /usr/lib/x86_64-linux-gnu/libprotobuf.so 
+   -lpthread 
+   /usr/lib/x86_64-linux-gnu/libcrypto.so
+)
 
 # Sources
 
@@ -343,9 +348,8 @@ If (NOT SDL2MAIN_LIBRARY)
   Set (SDL2MAIN_LIBRARY "")
 EndIf (NOT SDL2MAIN_LIBRARY)
 
-Target_Link_Libraries (flare ${CMAKE_LD_FLAGS} ${SDL2_LIBRARY} ${SDL2IMAGE_LIBRARY} ${SDL2MIXER_LIBRARY} ${SDL2TTF_LIBRARY} ${SDL2MAIN_LIBRARY})
-Target_Link_Libraries(chattest /home/klima1/Summer2019Research/Flare/flare-engine/GameNetworkingSockets/lib/libGameNetworkingSockets.so  /usr/lib/x86_64-linux-gnu/libprotobuf.so -lpthread /usr/lib/x86_64-linux-gnu/libcrypto.so
-)
+Target_Link_Libraries (flare ${CMAKE_LD_FLAGS} ${SDL2_LIBRARY} ${SDL2IMAGE_LIBRARY} ${SDL2MIXER_LIBRARY} ${SDL2TTF_LIBRARY} ${SDL2MAIN_LIBRARY} ${NETWORK_LIBRARIES})
+Target_Link_Libraries(chattest ${NETWORK_LIBRARIES} )
 
 # installing to the proper places
 install(PROGRAMS
