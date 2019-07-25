@@ -12,24 +12,43 @@
 #include <map>
 #include <cctype>
 #include <boost/algorithm/string.hpp>
+#include <iostream>
 
-#include "ChatManager.h"
 #include "ChatClient.h"
+using namespace std;
 
+bool inputAvailable()
+{
+  struct timeval tv;
+  fd_set fds;
+  tv.tv_sec = 0;
+  tv.tv_usec = 0;
+  FD_ZERO(&fds);
+  FD_SET(STDIN_FILENO, &fds);
+  select(STDIN_FILENO+1, &fds, NULL, NULL, &tv);
+  return (FD_ISSET(0, &fds));
+}
 
 int main(){
+  ChatClient client1(1,"Lemon");
 
-  ChatManager mgr; //instance of the ChatManager class
+  // int c;
+  // do {
+  //   //if (inputAvailable()){
+  //   //  c = getchar();
+  //   //  if (c == 'h'){
+  //   //    client1.postMessage("Hello!");
+  //   //  }
+  //   //}
+  //   usleep(100);
+  // //  std::cout << c << std::endl;
+  //   client1.logic();
+  // } while (c != 'q');
 
-  ChatClient client1(1,"Lemon",&mgr);
-  ChatClient client2(2,"Apple",&mgr);
-  ChatClient client3(3,"Cherry",&mgr);
-  ChatClient client4(4,"Goose",&mgr);
-  ChatClient client5(5, "Egg",&mgr);
-  client3.postMessage("HI");
-  client4.postMessage("Hello everyone");
+  while(true){
+    client1.logic();
+    client1.getRemoteChat();
+  }
 
-  client5.postMessage("/whisper Apple Popcorn with marshmallows?");
-  client1.postMessage("/whisper Goose Hello Benty! how are you?");
   return 0;
 }
