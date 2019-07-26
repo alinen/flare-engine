@@ -65,7 +65,7 @@ FLARE.  If not, see http://www.gnu.org/licenses/
 #include "NPC.h"
 #include "NPCManager.h"
 #include "PowerManager.h"
-#include "QuestLog.h"
+//#include "QuestLog.h"
 #include "RenderDevice.h"
 #include "SaveLoad.h"
 #include "Settings.h"
@@ -104,7 +104,7 @@ GameStatePlay::GameStatePlay()
 	hazards = new HazardManager();
 	menu = new MenuManager();
 	npcs = new NPCManager();
-	quests = new QuestLog(menu->questlog);
+	//quests = new QuestLog(menu->questlog);
 
 	// load the config file for character titles
 	loadTitles();
@@ -131,8 +131,8 @@ void GameStatePlay::resetGame() {
 	menu->inv->inventory[1].clear();
 	menu->inv->changed_equipment = true;
 	menu->inv->currency = 0;
-	menu->questlog->clearAll();
-	quests->createQuestList();
+	//menu->questlog->clearAll();
+	//quests->createQuestList();
 	menu->hudlog->clear();
 
 	// Finalize new character settings
@@ -354,7 +354,7 @@ void GameStatePlay::checkTeleport() {
 			if (pc->stats.permadeath && pc->stats.cur_state == StatBlock::AVATAR_DEAD) {
 				snd->stopMusic();
 				showLoading();
-				setRequestedGameState(new GameStateTitle());
+				//setRequestedGameState(new GameStateTitle());
 			}
 			else if (eset->misc.save_onload) {
 				if (!is_first_map_load)
@@ -434,7 +434,7 @@ void GameStatePlay::checkLog() {
 		const std::string& str = pc->log_msg.front().first;
 		const int msg_type = pc->log_msg.front().second;
 
-		menu->questlog->add(str, MenuLog::TYPE_MESSAGES, msg_type);
+		//menu->questlog->add(str, MenuLog::TYPE_MESSAGES, msg_type);
 		menu->hudlog->add(str, msg_type);
 
 		pc->log_msg.pop();
@@ -654,11 +654,11 @@ void GameStatePlay::checkNotifications() {
 		menu->pow->newPowerNotification = false;
 		menu->act->requires_attention[MenuActionBar::MENU_POWERS] = !menu->pow->visible;
 	}
-	if (quests->newQuestNotification) {
-		quests->newQuestNotification = false;
-		menu->act->requires_attention[MenuActionBar::MENU_LOG] = !menu->questlog->visible && !pc->questlog_dismissed;
-		pc->questlog_dismissed = false;
-	}
+	// if (quests->newQuestNotification) {
+	// 	quests->newQuestNotification = false;
+	// 	menu->act->requires_attention[MenuActionBar::MENU_LOG] = !menu->questlog->visible && !pc->questlog_dismissed;
+	// 	pc->questlog_dismissed = false;
+	//}
 
 	// if the player is transformed into a creature, don't notifications for the powers menu
 	if (pc->stats.transformed) {
@@ -912,7 +912,7 @@ void GameStatePlay::logic() {
 
 	mapr->logic(isPaused());
 	mapr->enemies_cleared = enemym->isCleared();
-	quests->logic();
+	//quests->logic();
 
 	pc->checkTransform();
 
@@ -1100,7 +1100,7 @@ bool GameStatePlay::checkPrimaryStat(const std::string& first, const std::string
 }
 
 GameStatePlay::~GameStatePlay() {
-	delete quests;
+//	delete quests;
 	delete npcs;
 	delete hazards;
 	delete enemym;

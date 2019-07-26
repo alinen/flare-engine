@@ -94,10 +94,10 @@ EndIf (NOT SDL2TTF_FOUND)
 
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/GameNetworkingSockets/include)
 Add_Definitions(-DGNUC -DGNU_COMPILER -DLINUX -DPOSIX)
-Set (NETWORK_LIBRARIES 
-   ${CMAKE_SOURCE_DIR}/GameNetworkingSockets/build/src/libGameNetworkingSockets.so  
-   /usr/lib/x86_64-linux-gnu/libprotobuf.so 
-   -lpthread 
+Set (NETWORK_LIBRARIES
+   ${CMAKE_SOURCE_DIR}/GameNetworkingSockets/build/src/libGameNetworkingSockets.so
+   /usr/lib/x86_64-linux-gnu/libprotobuf.so
+   -lpthread
    /usr/lib/x86_64-linux-gnu/libcrypto.so
 )
 
@@ -154,8 +154,8 @@ Set (FLARE_SOURCES
 	./src/Menu.cpp
 	./src/MenuActionBar.cpp
 	./src/MenuActiveEffects.cpp
-	./src/MenuBook.cpp
-	./src/MenuCharacter.cpp
+	 ./src/MenuBook.cpp
+	# ./src/MenuCharacter.cpp
 	./src/MenuConfirm.cpp
 	./src/MenuDevConsole.cpp
 	./src/MenuEnemy.cpp
@@ -172,13 +172,13 @@ Set (FLARE_SOURCES
 	./src/MenuStatBar.cpp
 	./src/MenuTalker.cpp
 	./src/MenuTouchControls.cpp
-	./src/MenuVendor.cpp
+	 ./src/MenuVendor.cpp
 	./src/MessageEngine.cpp
 	./src/ModManager.cpp
 	./src/NPC.cpp
 	./src/NPCManager.cpp
 	./src/PowerManager.cpp
-	./src/QuestLog.cpp
+	# ./src/QuestLog.cpp
 	./src/RenderDevice.cpp
 	./src/SaveLoad.cpp
 	./src/SDLInputState.cpp
@@ -269,15 +269,15 @@ Set (FLARE_HEADERS
 	./src/Menu.h
 	./src/MenuActionBar.h
 	./src/MenuActiveEffects.h
-	./src/MenuBook.h
-	./src/MenuCharacter.h
+	#./src/MenuBook.h
+	#./src/MenuCharacter.h
 	./src/MenuConfirm.h
 	./src/MenuDevConsole.h
 	./src/MenuEnemy.h
 	./src/MenuExit.h
 	./src/MenuHUDLog.h
-	./src/MenuInventory.h
-	./src/MenuItemStorage.h
+	#./src/MenuInventory.h
+# 	./src/MenuItemStorage.h
 	./src/MenuLog.h
 	./src/MenuManager.h
 	./src/MenuMiniMap.h
@@ -287,7 +287,7 @@ Set (FLARE_HEADERS
 	./src/MenuStatBar.h
 	./src/MenuTalker.h
 	./src/MenuTouchControls.h
-	./src/MenuVendor.h
+	#./src/MenuVendor.h
 	./src/MessageEngine.h
 	./src/ModManager.h
 	./src/NPC.h
