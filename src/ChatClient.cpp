@@ -165,6 +165,7 @@ private:
 
 	void PollIncomingMessages()
 	{
+		remoteMessages.clear();
 		while ( !m_bQuit )
 		{
 			ISteamNetworkingMessage *pIncomingMsg = nullptr;
@@ -180,6 +181,7 @@ private:
 			fwrite( pIncomingMsg->m_pData, 1, pIncomingMsg->m_cbSize, stdout );
 			fputc( '\n', stdout );
       strncpy(buffer,(const char *) pIncomingMsg->m_pData,pIncomingMsg->m_cbSize);
+			buffer[pIncomingMsg->m_cbSize] = '\0';
 
 			// We don't need this anymore.
       remoteMessages.push_back(buffer);

@@ -57,7 +57,7 @@ private:
 
 	WidgetButton *closeButton;
 	WidgetLabel *labelCharacter;
-	WidgetLabel *labelUnspent;
+	//WidgetLabel *labelUnspent;
 	WidgetListBox *statList;
 	std::vector<WidgetButton*> upgradeButton;
 
@@ -94,9 +94,9 @@ public:
 	void refreshStats();
 	void renderTooltips(const Point& position);
 	bool checkUpgrade();
-	int getUnspent() {
-		return skill_points;
-	}
+	// int getUnspent() {
+	// 	return skill_points;
+	// }
 };
 
 #endif

@@ -129,7 +129,7 @@ MenuPowers::MenuPowers()
 	, points_left(0)
 	, default_background("")
 	, label_powers(new WidgetLabel)
-	, label_unspent(new WidgetLabel)
+//	, label_unspent(new WidgetLabel)
 	, tab_control(NULL)
 	, tree_loaded(false)
 	, prev_powers_list_size(0)
@@ -152,9 +152,9 @@ MenuPowers::MenuPowers()
 				label_powers->setFromLabelInfo(Parse::popLabelInfo(infile.val));
 			}
 			// @ATTR unspent_points|label|Position of the text that displays the amount of unused power points.
-			else if (infile.key == "unspent_points") {
-				label_unspent->setFromLabelInfo(Parse::popLabelInfo(infile.val));
-			}
+			// else if (infile.key == "unspent_points") {
+			// 	label_unspent->setFromLabelInfo(Parse::popLabelInfo(infile.val));
+			// }
 			// @ATTR close|point|Position of the close button.
 			else if (infile.key == "close") close_pos = Parse::toPoint(infile.val);
 			// @ATTR tab_area|rectangle|Position and dimensions of the tree pages.
@@ -168,7 +168,7 @@ MenuPowers::MenuPowers()
 	label_powers->setText(msg->get("Powers"));
 	label_powers->setColor(font->getColor(FontEngine::COLOR_MENU_NORMAL));
 
-	label_unspent->setColor(font->getColor(FontEngine::COLOR_MENU_BONUS));
+	//label_unspent->setColor(font->getColor(FontEngine::COLOR_MENU_BONUS));
 
 	loadGraphics();
 
@@ -198,14 +198,14 @@ MenuPowers::~MenuPowers() {
 	menu_powers = NULL;
 
 	delete label_powers;
-	delete label_unspent;
+	//delete label_unspent;
 }
 
 void MenuPowers::align() {
 	Menu::align();
 
 	label_powers->setPos(window_area.x, window_area.y);
-	label_unspent->setPos(window_area.x, window_area.y);
+	//label_unspent->setPos(window_area.x, window_area.y);
 
 	closeButton->pos.x = window_area.x+close_pos.x;
 	closeButton->pos.y = window_area.y+close_pos.y;
@@ -1346,20 +1346,20 @@ void MenuPowers::render() {
 	// text overlay
 	label_powers->render();
 
-	// stats
-	if (!label_unspent->isHidden()) {
-		std::stringstream ss;
-
-		ss.str("");
-		if (points_left == 1) {
-			ss << msg->get("%d unspent skill point", points_left);
-		}
-		else if (points_left > 1) {
-			ss << msg->get("%d unspent skill points", points_left);
-		}
-		label_unspent->setText(ss.str());
-		label_unspent->render();
-	}
+	// // stats
+	// if (!label_unspent->isHidden()) {
+	// 	std::stringstream ss;
+	//
+	// 	ss.str("");
+	// 	if (points_left == 1) {
+	// 		ss << msg->get("%d unspent skill point", points_left);
+	// 	}
+	// 	else if (points_left > 1) {
+	// 		ss << msg->get("%d unspent skill points", points_left);
+	// 	}
+	// 	label_unspent->setText(ss.str());
+	// 	label_unspent->render();
+	// }
 }
 
 /**
@@ -1600,4 +1600,3 @@ void MenuPowers::defocusTabLists() {
 		}
 	}
 }
-

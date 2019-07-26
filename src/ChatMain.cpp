@@ -46,8 +46,8 @@ int main(){
   // } while (c != 'q');
 
   while(true){
-    client1.logic();
-    client1.getRemoteChat();
+    //client1.logic();
+    //client1.getRemoteChat();
   }
 
   return 0;
