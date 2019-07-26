@@ -81,6 +81,7 @@ public:
 	unsigned int max_length;
 	bool only_numbers;
 	bool accept_to_defocus;
+	bool has_text;
 };
 
 #endif

@@ -107,6 +107,7 @@ ChatBox::ChatBox()
 	label_name->setText("CHAT");
 	label_name->setFont(font_who);
 	input_name = new WidgetInput(WidgetInput::DEFAULT_FILE);
+	input_name->accept_to_defocus = true;
 	input_name->max_length = 20;
 	input_name->setBasePos(text_pos.x, text_pos.y + text_offset.y, Utils::ALIGN_BOTTOMLEFT);
 	textbox = new WidgetScrollBox(text_pos.w, 500);//text_pos.h-(text_offset.y*2));
@@ -128,13 +129,13 @@ void ChatBox::align() {
  * Menu interaction (enter/space/click to continue) -----------------------
  */
 void ChatBox::logic() {
-	// tablist.logic();
 	if (!input_name->edit_mode){
 		tablist.logic();
 	}
+	textbox->logic();
  	input_name->logic();
-	if (inpt->pressing[Input::ACCEPT] && !inpt->lock[Input::ACCEPT]){
-		inpt->lock[Input::ACCEPT] = true;
+	if (input_name->has_text){ // ASN: someone hit ENTER
+		input_name->has_text = true;
 		client1.postMessage(input_name->getText());
 		input_lines.push_back(input_name->getText());
 		//confirm_clicked = true;
@@ -150,10 +151,9 @@ void ChatBox::logic() {
 
 void ChatBox::chatrender(){
 
-	 int y = 0;
-	 for (int i = 0; i < input_lines.size(); i++)
-	 {
-		 std::cout << input_lines[i] << std::endl;
+	int y = 0;
+	for (int i = 0; i < input_lines.size(); i++)
+	{
 		Point line_size = font->calc_size(input_lines[i],textbox->pos.w-(text_offset.x*2));
 		font->render(
 			input_lines[i],
@@ -165,10 +165,8 @@ void ChatBox::chatrender(){
 			font->getColor(FontEngine::COLOR_MENU_NORMAL)
 		);
 		y = y + line_size.y;
-  }
+    }
 	align();
-
-	std::cout << "****************\n";
 }
 void ChatBox::render() {
 	 if (!visible) return;
@@ -190,7 +188,7 @@ void ChatBox::render() {
 	setBackgroundClip(src);
 	setBackgroundDest(dest);
 	Menu::render();
-  chatrender();
+    chatrender();
 
 
 	// name & dialog text

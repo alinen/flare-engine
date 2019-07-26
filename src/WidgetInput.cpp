@@ -123,6 +123,7 @@ void WidgetInput::logic() {
 bool WidgetInput::logicAt(int x, int y) {
 	Point mouse(x, y);
 
+	has_text = false;
 	if (checkClick(mouse)) {
 		edit_mode = true;
 	}
@@ -188,6 +189,7 @@ bool WidgetInput::logicAt(int x, int y) {
 		if (accept_to_defocus && inpt->pressing[Input::ACCEPT] && !inpt->lock[Input::ACCEPT]) {
 			inpt->lock[Input::ACCEPT] = true;
 			edit_mode = false;
+			has_text = true;
 		}
 		else if (inpt->pressing[Input::CANCEL] && !inpt->lock[Input::CANCEL]) {
 			inpt->lock[Input::CANCEL] = true;
