@@ -129,7 +129,7 @@ private:
 	std::string default_background;
 
 	WidgetLabel *label_powers;
-	WidgetLabel *label_unspent;
+//	WidgetLabel *label_unspent;
 	WidgetTabControl *tab_control;
 
 	bool tree_loaded;

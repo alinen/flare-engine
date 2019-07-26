@@ -37,6 +37,7 @@ class WidgetButton;
 class WidgetLabel;
 class WidgetScrollBox;
 class WidgetInput;
+class ChatClient;
 
 class ChatBox : public Menu {
 private:
@@ -63,7 +64,8 @@ private:
 	Color trade_color_pressed;
 
 	std::vector<std::string> input_lines;
-
+	ChatClient client1;
+	
 public:
 	explicit ChatBox();
 	~ChatBox();
@@ -73,7 +75,6 @@ public:
 	void logic();
 	void render();
 	void chatrender();
-
 };
 
 #endif

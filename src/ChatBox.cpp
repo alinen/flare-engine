@@ -57,6 +57,7 @@ ChatBox::ChatBox()
 	, trade_color_normal(font->getColor(FontEngine::COLOR_MENU_BONUS))
 	, trade_color_hover(font->getColor(FontEngine::COLOR_WIDGET_NORMAL))
 	, trade_color_pressed(font->getColor(FontEngine::COLOR_WIDGET_DISABLED))
+	, client1(0, "Foobar")
  {
 
 	setBackground("images/menus/dialog_box.png");
@@ -134,19 +135,25 @@ void ChatBox::logic() {
  	input_name->logic();
 	if (inpt->pressing[Input::ACCEPT] && !inpt->lock[Input::ACCEPT]){
 		inpt->lock[Input::ACCEPT] = true;
-		//std::cout << input_name->getText() << std::endl;
+		client1.postMessage(input_name->getText());
 		input_lines.push_back(input_name->getText());
 		//confirm_clicked = true;
 	}
-	chatrender();
+	client1.logic();
+	std::vector<std::string> remote_chats = client1.getRemoteChat();
+	for (int i = 0; i < remote_chats.size(); i++)
+	{
+		input_lines.push_back(remote_chats[i]);
+	}
 }
 
 
 void ChatBox::chatrender(){
 
-	int y = 0;
-	for (int i = 0; i < input_lines.size(); i++)
-	{
+	 int y = 0;
+	 for (int i = 0; i < input_lines.size(); i++)
+	 {
+		 std::cout << input_lines[i] << std::endl;
 		Point line_size = font->calc_size(input_lines[i],textbox->pos.w-(text_offset.x*2));
 		font->render(
 			input_lines[i],
@@ -161,6 +168,7 @@ void ChatBox::chatrender(){
   }
 	align();
 
+	std::cout << "****************\n";
 }
 void ChatBox::render() {
 	 if (!visible) return;
@@ -182,6 +190,7 @@ void ChatBox::render() {
 	setBackgroundClip(src);
 	setBackgroundDest(dest);
 	Menu::render();
+  chatrender();
 
 
 	// name & dialog text

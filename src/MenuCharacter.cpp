@@ -44,7 +44,7 @@ FLARE.  If not, see http://www.gnu.org/licenses/
 MenuCharacter::MenuCharacter()
 	: closeButton(new WidgetButton("images/menus/buttons/button_x.png"))
 	, labelCharacter(new WidgetLabel())
-	, labelUnspent(new WidgetLabel())
+	//, labelUnspent(new WidgetLabel())
 	, skill_points(0)
 	, statlist_rows(10)
 	, statlist_scrollbar_offset(0)
@@ -53,7 +53,7 @@ MenuCharacter::MenuCharacter()
 {
 	labelCharacter->setText(msg->get("Character"));
 	labelCharacter->setColor(font->getColor(FontEngine::COLOR_MENU_NORMAL));
-	labelUnspent->setColor(font->getColor(FontEngine::COLOR_MENU_BONUS));
+//	labelUnspent->setColor(font->getColor(FontEngine::COLOR_MENU_BONUS));
 
 	// 2 is added here to account for CSTAT_NAME and CSTAT_LEVEL
 	cstat.resize(eset->primary_stats.list.size() + 2);
@@ -182,7 +182,7 @@ MenuCharacter::MenuCharacter()
 			}
 
 			// @ATTR unspent|label|Position of the label showing the number of unspent stat points.
-			else if(infile.key == "unspent") labelUnspent->setFromLabelInfo(Parse::popLabelInfo(infile.val));
+//			else if(infile.key == "unspent") labelUnspent->setFromLabelInfo(Parse::popLabelInfo(infile.val));
 
 			// @ATTR show_resists|bool|Hide the elemental "Resistance" stats in the statlist if set to false.
 			else if (infile.key == "show_resists") show_resists = Parse::toBool(infile.val);
@@ -271,7 +271,7 @@ void MenuCharacter::align() {
 		cstat[i].value->setPos(window_area.x, window_area.y);
 	}
 
-	labelUnspent->setPos(window_area.x, window_area.y);
+	//labelUnspent->setPos(window_area.x, window_area.y);
 }
 
 /**
@@ -306,13 +306,13 @@ void MenuCharacter::refreshStats() {
 	}
 
 	ss.str("");
-	if (skill_points == 1) {
-		ss << msg->get("%d unspent stat point", skill_points);
-	}
-	else if (skill_points > 1) {
-		ss << msg->get("%d unspent stat points", skill_points);
-	}
-	labelUnspent->setText(ss.str());
+	// if (skill_points == 1) {
+	// 	ss << msg->get("%d unspent stat point", skill_points);
+	// }
+	// else if (skill_points > 1) {
+	// 	ss << msg->get("%d unspent stat points", skill_points);
+	// }
+	//labelUnspent->setText(ss.str());
 
 	// scrolling stat list
 	unsigned stat_index = 0;
@@ -523,7 +523,7 @@ void MenuCharacter::render() {
 	labelCharacter->render();
 
 	// unspent points
-	labelUnspent->render();
+	//labelUnspent->render();
 
 	// labels and values
 	for (size_t i = 0; i < cstat.size(); ++i) {
@@ -591,7 +591,7 @@ bool MenuCharacter::checkSkillPoints() {
 MenuCharacter::~MenuCharacter() {
 	delete closeButton;
 	delete labelCharacter;
-	delete labelUnspent;
+//	delete labelUnspent;
 	for (size_t i = 0; i < cstat.size(); ++i) {
 		delete cstat[i].label;
 		delete cstat[i].value;
