@@ -461,7 +461,9 @@ void MenuManager::logic() {
 		act->checkMenu(clicking_character, clicking_inventory, clicking_powers, clicking_log);
 
 		// inventory menu toggle
-		if ((inpt->pressing[Input::INVENTORY] && !key_lock && !mouse_dragging && !keyboard_dragging) || clicking_inventory) {
+		// ASN MOD: DISABLE
+		if (clicking_inventory) {
+		//if ((inpt->pressing[Input::INVENTORY] && !key_lock && !mouse_dragging && !keyboard_dragging) || clicking_inventory) {
 			key_lock = true;
 			if (inv->visible) {
 				snd->play(inv->sfx_close, snd->DEFAULT_CHANNEL, snd->NO_POS, !snd->LOOP);
@@ -476,8 +478,9 @@ void MenuManager::logic() {
 
 		}
 
-		// powers menu toggle
-		if (((inpt->pressing[Input::POWERS] && !key_lock && !mouse_dragging && !keyboard_dragging) || clicking_powers) && !pc->stats.transformed) {
+		// ASN MOD: DISABLE powers menu toggle
+		if (clicking_powers && !pc->stats.transformed) {
+		//if (((inpt->pressing[Input::POWERS] && !key_lock && !mouse_dragging && !keyboard_dragging) || clicking_powers) && !pc->stats.transformed) {
 			key_lock = true;
 			if (pow->visible) {
 				snd->play(pow->sfx_close, snd->DEFAULT_CHANNEL, snd->NO_POS, !snd->LOOP);
@@ -491,8 +494,9 @@ void MenuManager::logic() {
 			}
 		}
 
-		// character menu toggleggle
-		if ((inpt->pressing[Input::CHARACTER] && !key_lock && !mouse_dragging && !keyboard_dragging) || clicking_character) {
+		// ASN MOD: DISABLE character menu toggleggle
+		if (clicking_character) {
+		// if ((inpt->pressing[Input::CHARACTER] && !key_lock && !mouse_dragging && !keyboard_dragging) || clicking_character) {
 			key_lock = true;
 			if (chr->visible) {
 				snd->play(chr->sfx_close, snd->DEFAULT_CHANNEL, snd->NO_POS, !snd->LOOP);
@@ -508,8 +512,9 @@ void MenuManager::logic() {
 			}
 		}
 
-		// log menu toggle
-		if ((inpt->pressing[Input::LOG] && !key_lock && !mouse_dragging && !keyboard_dragging) || clicking_log) {
+		// ASN MOD DISABLE: log menu toggle
+		//if ((inpt->pressing[Input::LOG] && !key_lock && !mouse_dragging && !keyboard_dragging) || clicking_log) {
+		if (clicking_log) {
 			key_lock = true;
 			if (questlog->visible) {
 				snd->play(questlog->sfx_close, snd->DEFAULT_CHANNEL, snd->NO_POS, !snd->LOOP);
