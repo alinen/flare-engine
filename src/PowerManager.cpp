@@ -1747,4 +1747,3 @@ PowerManager::~PowerManager() {
 		hazards.pop();
 	}
 }
-
