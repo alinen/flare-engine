@@ -78,7 +78,7 @@ MenuManager::MenuManager()
 	, inv(NULL)
 	, pow(NULL)
 	, chr(NULL)
-	, questlog(NULL)
+	//, questlog(NULL)
 	, hudlog(NULL)
 	, act(NULL)
 	, book(NULL)
@@ -115,7 +115,7 @@ MenuManager::MenuManager()
 	chr = new MenuCharacter();
 	inv = new MenuInventory();
 	pow = new MenuPowers();
-	questlog = new MenuLog();
+	//questlog = new MenuLog();
 	stash = new MenuStash();
 	book = new MenuBook();
 	num_picker = new MenuNumPicker();
@@ -135,7 +135,7 @@ MenuManager::MenuManager()
 	menus.push_back(chr); // menus[11]
 	menus.push_back(inv); // menus[12]
 	menus.push_back(pow); // menus[13]
-	menus.push_back(questlog); // menus[14]
+	//menus.push_back(questlog); // menus[14]
 	menus.push_back(stash); // menus[15]
 	menus.push_back(book); // menus[16]
 	menus.push_back(num_picker); // menus[17]
@@ -196,7 +196,7 @@ void MenuManager::handleKeyboardNavigation() {
 	vendor->tablist_buy.setNextTabList(NULL);
 	vendor->tablist_sell.setNextTabList(NULL);
 	chr->tablist.setNextTabList(NULL);
-	questlog->setNextTabList(&questlog->tablist);
+	//questlog->setNextTabList(&questlog->tablist);
 	inv->tablist.setPrevTabList(NULL);
 	pow->setNextTabList(NULL);
 
@@ -205,15 +205,15 @@ void MenuManager::handleKeyboardNavigation() {
 		stash->tablist.unlock();
 		vendor->tablist.unlock();
 		chr->tablist.unlock();
-		if (!questlog->getCurrentTabList())
-			questlog->tablist.unlock();
+		//if (!questlog->getCurrentTabList())
+		//	questlog->tablist.unlock();
 
 	}
-	else if (!vendor->visible && !stash->visible && !chr->visible && !questlog->visible) {
-		inv->tablist.unlock();
-		if (!pow->getCurrentTabList())
-			pow->tablist.unlock();
-	}
+//	else if (!vendor->visible && !stash->visible && !chr->visible && !questlog->visible) {
+	//	inv->tablist.unlock();
+	//	if (!pow->getCurrentTabList())
+	//		pow->tablist.unlock();
+//	}
 
 	if (drag_src == DRAG_SRC_NONE) {
 		if (inv->visible) {
@@ -221,7 +221,7 @@ void MenuManager::handleKeyboardNavigation() {
 			vendor->tablist_buy.setNextTabList(&inv->tablist);
 			vendor->tablist_sell.setNextTabList(&inv->tablist);
 			chr->tablist.setNextTabList(&inv->tablist);
-			questlog->setNextTabList(&inv->tablist);
+		//	questlog->setNextTabList(&inv->tablist);
 
 			if (stash->visible) {
 				inv->tablist.setPrevTabList(&stash->tablist);
@@ -232,24 +232,24 @@ void MenuManager::handleKeyboardNavigation() {
 			else if (chr->visible) {
 				inv->tablist.setPrevTabList(&chr->tablist);
 			}
-			else if (questlog->visible) {
-				inv->tablist.setPrevTabList(&questlog->tablist);
-			}
+			//else if (questlog->visible) {
+			//	inv->tablist.setPrevTabList(&questlog->tablist);
+			//}
 		}
 		else if (pow->visible) {
 			stash->tablist.setNextTabList(&pow->tablist);
 			vendor->tablist_buy.setNextTabList(&pow->tablist);
 			vendor->tablist_sell.setNextTabList(&pow->tablist);
 			chr->tablist.setNextTabList(&pow->tablist);
-			questlog->setNextTabList(&pow->tablist);
+			//questlog->setNextTabList(&pow->tablist);
 
 			// NOTE stash and vendor are only visible with inventory, so we don't need to handle them here
 			if (chr->visible) {
 				pow->tablist.setPrevTabList(&chr->tablist);
 			}
-			else if (questlog->visible) {
-				pow->tablist.setPrevTabList(&questlog->tablist);
-			}
+		//	else if (questlog->visible) {
+		//		pow->tablist.setPrevTabList(&questlog->tablist);
+		//	}
 		}
 	}
 
@@ -343,7 +343,7 @@ void MenuManager::logic() {
 			(inv->visible && Utils::isWithinRect(inv->window_area, inpt->mouse)) ||
 			(vendor->visible && Utils::isWithinRect(vendor->window_area, inpt->mouse)) ||
 			(pow->visible && Utils::isWithinRect(pow->window_area, inpt->mouse)) ||
-			(questlog->visible && Utils::isWithinRect(questlog->window_area, inpt->mouse)) ||
+			//(questlog->visible && Utils::isWithinRect(questlog->window_area, inpt->mouse)) ||
 			(talker->visible && Utils::isWithinRect(talker->window_area, inpt->mouse)) ||
 			(stash->visible && Utils::isWithinRect(stash->window_area, inpt->mouse)))
 		{
@@ -361,7 +361,7 @@ void MenuManager::logic() {
 	inv->logic();
 	vendor->logic();
 	pow->logic();
-	questlog->logic();
+	//questlog->logic();
 	talker->logic();
 	chat_box->logic();
 	stash->logic();
@@ -516,15 +516,15 @@ void MenuManager::logic() {
 		//if ((inpt->pressing[Input::LOG] && !key_lock && !mouse_dragging && !keyboard_dragging) || clicking_log) {
 		if (clicking_log) {
 			key_lock = true;
-			if (questlog->visible) {
-				snd->play(questlog->sfx_close, snd->DEFAULT_CHANNEL, snd->NO_POS, !snd->LOOP);
-				closeLeft();
-			}
+		//	if (questlog->visible) {
+			//	snd->play(questlog->sfx_close, snd->DEFAULT_CHANNEL, snd->NO_POS, !snd->LOOP);
+		//		closeLeft();
+			//}
 			else {
 				closeLeft();
 				act->requires_attention[MenuActionBar::MENU_LOG] = false;
-				questlog->visible = true;
-				snd->play(questlog->sfx_open, snd->DEFAULT_CHANNEL, snd->NO_POS, !snd->LOOP);
+				//questlog->visible = true;
+			//	snd->play(questlog->sfx_open, snd->DEFAULT_CHANNEL, snd->NO_POS, !snd->LOOP);
 				// Make sure the log isn't scrolled when we open the log menu
 				inpt->resetScroll();
 			}
@@ -545,7 +545,7 @@ void MenuManager::logic() {
 	}
 
 	bool console_open = settings->dev_mode && devconsole->visible;
-	menus_open = (inv->visible || pow->visible || chr->visible || questlog->visible || vendor->visible || talker->visible ||chat_box->visible || book->visible || console_open);
+	menus_open = (inv->visible || pow->visible || chr->visible || vendor->visible || talker->visible ||chat_box->visible || book->visible || console_open);
 	pause = (eset->misc.menus_pause && menus_open) || exit->visible || console_open || book->visible;
 
 	touch_controls->visible = !menus_open && !exit->visible;
@@ -593,10 +593,10 @@ void MenuManager::logic() {
 				inpt->lock[Input::MAIN2] = true;
 				inpt->pressing[Input::MAIN2] = false;
 			}
-			else if (questlog->visible && Utils::isWithinRect(questlog->window_area, inpt->mouse)) {
-				inpt->lock[Input::MAIN2] = true;
-				inpt->pressing[Input::MAIN2] = false;
-			}
+			// else if (questlog->visible && Utils::isWithinRect(questlog->window_area, inpt->mouse)) {
+			// 	inpt->lock[Input::MAIN2] = true;
+			// 	inpt->pressing[Input::MAIN2] = false;
+			// }
 			else if (vendor->visible && Utils::isWithinRect(vendor->window_area, inpt->mouse)) {
 				inpt->lock[Input::MAIN2] = true;
 				inpt->pressing[Input::MAIN2] = false;
@@ -690,9 +690,9 @@ void MenuManager::logic() {
 				}
 			}
 
-			if (questlog->visible && Utils::isWithinRect(questlog->window_area,inpt->mouse)) {
-				inpt->lock[Input::MAIN1] = true;
-			}
+			// if (questlog->visible && Utils::isWithinRect(questlog->window_area,inpt->mouse)) {
+			// 	inpt->lock[Input::MAIN1] = true;
+			// }
 
 			// pick up an inventory item
 			if (inv->visible && Utils::isWithinRect(inv->window_area,inpt->mouse)) {
@@ -834,9 +834,9 @@ void MenuManager::logic() {
 					// if dragging and the source was inventory, drop item to the floor
 
 					// quest items cannot be dropped
-					if (!items->items[drag_stack.item].quest_item) {
-						drop_stack.push(drag_stack);
-					}
+					// if (!items->items[drag_stack.item].quest_item) {
+					// 	drop_stack.push(drag_stack);
+					// }
 					else {
 						pc->logMsg(msg->get("This item can not be dropped."), Avatar::MSG_NORMAL);
 						items->playSound(drag_stack.item);
@@ -1206,9 +1206,9 @@ void MenuManager::render() {
 	if (chr->visible && Utils::rectsOverlap(hudlog->window_area, chr->window_area)) {
 		hudlog_overlapped = true;
 	}
-	if (questlog->visible && Utils::rectsOverlap(hudlog->window_area, questlog->window_area)) {
-		hudlog_overlapped = true;
-	}
+	// if (questlog->visible && Utils::rectsOverlap(hudlog->window_area, questlog->window_area)) {
+	// 	hudlog_overlapped = true;
+	// }
 	if (inv->visible && Utils::rectsOverlap(hudlog->window_area, inv->window_area)) {
 		hudlog_overlapped = true;
 	}
@@ -1354,7 +1354,7 @@ void MenuManager::closeAll() {
 void MenuManager::closeLeft() {
 	resetDrag();
 	chr->visible = false;
-	questlog->visible = false;
+//	questlog->visible = false;
 	exit->visible = false;
 	stash->visible = false;
 	book->closeWindow();
@@ -1410,7 +1410,7 @@ MenuManager::~MenuManager() {
 	delete pow;
 	delete chr;
 	delete hudlog;
-	delete questlog;
+	//delete questlog;
 	delete act;
 	delete vendor;
 	delete talker;
