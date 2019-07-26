@@ -155,7 +155,7 @@ Set (FLARE_SOURCES
 	./src/MenuActionBar.cpp
 	./src/MenuActiveEffects.cpp
 	 ./src/MenuBook.cpp
-	# ./src/MenuCharacter.cpp
+	./src/MenuCharacter.cpp
 	./src/MenuConfirm.cpp
 	./src/MenuDevConsole.cpp
 	./src/MenuEnemy.cpp
@@ -178,7 +178,7 @@ Set (FLARE_SOURCES
 	./src/NPC.cpp
 	./src/NPCManager.cpp
 	./src/PowerManager.cpp
-	# ./src/QuestLog.cpp
+	 ./src/QuestLog.cpp
 	./src/RenderDevice.cpp
 	./src/SaveLoad.cpp
 	./src/SDLInputState.cpp
@@ -269,15 +269,15 @@ Set (FLARE_HEADERS
 	./src/Menu.h
 	./src/MenuActionBar.h
 	./src/MenuActiveEffects.h
-	#./src/MenuBook.h
-	#./src/MenuCharacter.h
+	./src/MenuBook.h
+	./src/MenuCharacter.h
 	./src/MenuConfirm.h
 	./src/MenuDevConsole.h
 	./src/MenuEnemy.h
 	./src/MenuExit.h
 	./src/MenuHUDLog.h
-	#./src/MenuInventory.h
-# 	./src/MenuItemStorage.h
+	./src/MenuInventory.h
+	./src/MenuItemStorage.h
 	./src/MenuLog.h
 	./src/MenuManager.h
 	./src/MenuMiniMap.h
@@ -287,7 +287,7 @@ Set (FLARE_HEADERS
 	./src/MenuStatBar.h
 	./src/MenuTalker.h
 	./src/MenuTouchControls.h
-	#./src/MenuVendor.h
+	./src/MenuVendor.h
 	./src/MessageEngine.h
 	./src/ModManager.h
 	./src/NPC.h

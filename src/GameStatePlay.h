@@ -35,7 +35,7 @@ class Avatar;
 class Enemy;
 class MenuManager;
 class NPCManager;
-//class QuestLog;
+class QuestLog;
 class WidgetLabel;
 
 class ActionData;
@@ -66,7 +66,7 @@ private:
 	Enemy *enemy;
 
 	NPCManager *npcs;
-	//QuestLog *quests;
+	QuestLog *quests;
 
 	bool restrictPowerUse();
 	void checkEnemyFocus();
