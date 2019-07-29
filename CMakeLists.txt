@@ -340,7 +340,8 @@ IF (WIN32)
 ENDIF (WIN32)
 
 Add_Executable (flare ${FLARE_SOURCES} ${FLARE_HEADERS})
-Add_Executable (chattest  ./src/ChatMain.cpp ./src/NetClient.h ./src/NetClient.cpp)
+Add_Executable (chatsend  ./src/ChatSend.cpp ./src/NetClient.h ./src/NetClient.cpp)
+Add_Executable (chatreceive  ./src/ChatReceive.cpp ./src/NetClient.h ./src/NetClient.cpp)
 
 
 # libSDLMain comes with libSDL if needed on certain platforms
@@ -349,7 +350,8 @@ If (NOT SDL2MAIN_LIBRARY)
 EndIf (NOT SDL2MAIN_LIBRARY)
 
 Target_Link_Libraries (flare ${CMAKE_LD_FLAGS} ${SDL2_LIBRARY} ${SDL2IMAGE_LIBRARY} ${SDL2MIXER_LIBRARY} ${SDL2TTF_LIBRARY} ${SDL2MAIN_LIBRARY} ${NETWORK_LIBRARIES})
-Target_Link_Libraries(chattest ${NETWORK_LIBRARIES} )
+Target_Link_Libraries(chatsend ${NETWORK_LIBRARIES} )
+Target_Link_Libraries(chatreceive ${NETWORK_LIBRARIES} )
 
 # installing to the proper places
 install(PROGRAMS

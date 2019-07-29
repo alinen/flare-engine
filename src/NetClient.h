@@ -29,7 +29,6 @@ public:
   void logic();
   void postMessage(std::string message); //passes chat message
 
-
   int ID() const;
   const std::string& name() const;
   const std::vector<std::string>& getRemoteChat() const;
