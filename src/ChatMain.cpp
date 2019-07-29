@@ -14,7 +14,7 @@
 #include <boost/algorithm/string.hpp>
 #include <iostream>
 
-#include "ChatClient.h"
+#include "NetClient.h"
 using namespace std;
 
 bool inputAvailable()
@@ -30,7 +30,7 @@ bool inputAvailable()
 }
 
 int main(){
-  ChatClient client1(1,"Lemon");
+  NetClient client1(1,"Lemon");
 
   // int c;
   // do {
@@ -46,8 +46,12 @@ int main(){
   // } while (c != 'q');
 
   while(true){
-    //client1.logic();
-    //client1.getRemoteChat();
+    client1.logic();
+    const vector<string>& msgs = client1.getRemoteChat();
+    for (unsigned int i = 0; i < msgs.size(); i++)
+    {
+      cout << msgs[i] << endl;
+    }
   }
 
   return 0;

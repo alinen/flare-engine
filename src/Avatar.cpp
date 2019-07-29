@@ -43,6 +43,7 @@ FLARE.  If not, see http://www.gnu.org/licenses/
 #include "MenuManager.h"
 #include "MessageEngine.h"
 #include "ModManager.h"
+#include "NetClient.h"
 #include "PowerManager.h"
 #include "RenderDevice.h"
 #include "SaveLoad.h"
@@ -760,6 +761,278 @@ void Avatar::logic(std::vector<ActionData> &action_queue, bool restrict_power_us
 	if (stats.cur_state != StatBlock::AVATAR_ATTACK && stats.charge_speed != 0.0f)
 		stats.charge_speed = 0.0f;
 }
+
+void Avatar::logic(const PlayerMessage& netmsg) {
+	// clear current space to allow correct movement
+	mapr->collider.unblock(stats.pos.x, stats.pos.y);
+
+	if (transform_triggered)
+		transform_triggered = false;
+
+	// handle when the player stops blocking
+	if (stats.effects.triggered_block && !stats.blocking) {
+		stats.cur_state = StatBlock::AVATAR_STANCE;
+		stats.effects.triggered_block = false;
+		stats.effects.clearTriggerEffects(Power::TRIGGER_BLOCK);
+		stats.refresh_stats = true;
+	}
+
+/* TODO
+	if (!inpt->pressing[Input::MAIN2]) {
+		drag_walking = false;
+	}
+
+	// block some interactions when attacking/moving
+	attacking_with_main1 = inpt->pressing[Input::MAIN1] && !inpt->lock[Input::MAIN1];
+	moving_with_main2 = inpt->pressing[Input::MAIN2] && !inpt->lock[Input::MAIN2];
+*/
+
+	// handle animation
+	if (!stats.effects.stun) {
+		activeAnimation->advanceFrame();
+		for (unsigned i=0; i < anims.size(); i++) {
+			if (anims[i] != NULL)
+				anims[i]->advanceFrame();
+		}
+	}
+
+	// save a valid tile position in the event that we untransform on an invalid tile
+	if (stats.transformed && mapr->collider.isValidPosition(stats.pos.x, stats.pos.y, MapCollision::MOVE_NORMAL, MapCollision::COLLIDE_HERO)) {
+		transform_pos = stats.pos;
+		transform_map = mapr->getFilename();
+	}
+
+	if (!stats.effects.stun) {
+		bool allowed_to_move;
+		bool allowed_to_use_power = true;
+
+		switch(stats.cur_state) {
+			case StatBlock::AVATAR_STANCE:
+
+				setAnimation("stance");
+
+				// allowed to move or use powers?
+				/*
+				if (settings->mouse_move) {
+					allowed_to_move = restrict_power_use && (!inpt->lock[Input::MAIN2] || drag_walking);
+					allowed_to_use_power = true;
+
+					if (inpt->pressing[Input::MAIN2] && inpt->pressing[Input::SHIFT]) {
+						inpt->lock[Input::MAIN2] = false;
+					}
+				}
+				else {
+					allowed_to_move = true;
+					allowed_to_use_power = true;
+				}
+
+				// handle transitions to RUN
+				if (allowed_to_move)
+					set_direction();
+
+				if (pressing_move() && allowed_to_move) {
+					if (move()) { // no collision
+						if (settings->mouse_move && inpt->pressing[Input::MAIN2]) {
+							inpt->lock[Input::MAIN2] = true;
+							drag_walking = true;
+						}
+
+						stats.cur_state = StatBlock::AVATAR_RUN;
+					}
+				}*/
+
+				break;
+
+			case StatBlock::AVATAR_RUN:
+
+				setAnimation("run");
+
+/*
+				if (!sound_steps.empty()) {
+					int stepfx = rand() % static_cast<int>(sound_steps.size());
+
+					if (activeAnimation->isFirstFrame() || activeAnimation->isActiveFrame())
+						snd->play(sound_steps[stepfx], snd->DEFAULT_CHANNEL, snd->NO_POS, !snd->LOOP);
+				}
+
+				// handle direction changes
+				set_direction();
+				*/
+
+				// handle transition to STANCE
+				if (!pressing_move()) {
+					stats.cur_state = StatBlock::AVATAR_STANCE;
+					break;
+				}
+				else if (!move()) { // collide with wall
+					stats.cur_state = StatBlock::AVATAR_STANCE;
+					break;
+				}
+				else if (settings->mouse_move && inpt->pressing[Input::SHIFT]) {
+					// when moving with the mouse, pressing Shift should stop movement and begin attacking
+					stats.cur_state = StatBlock::AVATAR_STANCE;
+					break;
+				}
+
+				if (activeAnimation->getName() != "run")
+					stats.cur_state = StatBlock::AVATAR_STANCE;
+
+				break;
+
+			case StatBlock::AVATAR_ATTACK:
+
+				setAnimation(attack_anim);
+
+				if (attack_cursor) {
+					curs->setCursor(CursorManager::CURSOR_ATTACK);
+				}
+
+				if (activeAnimation->isFirstFrame()) {
+					float attack_speed = (stats.effects.getAttackSpeed(attack_anim) * powers->powers[current_power].attack_speed) / 100.0f;
+					activeAnimation->setSpeed(attack_speed);
+					playAttackSound(attack_anim);
+					power_cast_timers[current_power].setDuration(activeAnimation->getDuration());
+				}
+
+				// do power
+				if (activeAnimation->isActiveFrame() && !stats.hold_state) {
+					// some powers check if the caster is blocking a tile
+					// so we block the player tile prematurely here
+					mapr->collider.block(stats.pos.x, stats.pos.y, !MapCollision::IS_ALLY);
+
+					powers->activate(current_power, &stats, act_target);
+					power_cooldown_timers[current_power].setDuration(powers->powers[current_power].cooldown);
+
+					if (!stats.state_timer.isEnd())
+						stats.hold_state = true;
+				}
+
+				// animation is done, switch back to normal stance
+				if ((activeAnimation->isLastFrame() && stats.state_timer.isEnd()) || activeAnimation->getName() != attack_anim) {
+					stats.cur_state = StatBlock::AVATAR_STANCE;
+					stats.cooldown.reset(Timer::BEGIN);
+					allowed_to_use_power = false;
+					stats.prevent_interrupt = false;
+					if (settings->mouse_move) {
+						drag_walking = true;
+					}
+				}
+
+				break;
+
+			case StatBlock::AVATAR_BLOCK:
+
+				setAnimation("block");
+
+				stats.blocking = false;
+
+				break;
+
+			case StatBlock::AVATAR_HIT:
+
+				setAnimation("hit");
+
+				if (activeAnimation->isFirstFrame()) {
+					stats.effects.triggered_hit = true;
+
+					if (stats.block_power != 0) {
+						power_cooldown_timers[stats.block_power].setDuration(powers->powers[stats.block_power].cooldown);
+						stats.block_power = 0;
+					}
+				}
+
+				if (activeAnimation->getTimesPlayed() >= 1 || activeAnimation->getName() != "hit") {
+					stats.cur_state = StatBlock::AVATAR_STANCE;
+					if (settings->mouse_move) {
+						drag_walking = true;
+					}
+				}
+
+				break;
+
+			case StatBlock::AVATAR_DEAD:
+				allowed_to_use_power = false;
+
+				if (stats.effects.triggered_death) break;
+
+				if (stats.transformed) {
+					stats.transform_duration = 0;
+					untransform();
+				}
+
+				setAnimation("die");
+
+				if (!stats.corpse && activeAnimation->isFirstFrame() && activeAnimation->getTimesPlayed() < 1) {
+					stats.effects.clearEffects();
+
+					// reset power cooldowns
+					for (size_t i = 0; i < power_cooldown_timers.size(); i++) {
+						power_cooldown_timers[i].reset(Timer::END);
+						power_cast_timers[i].reset(Timer::END);
+					}
+
+					// close menus in GameStatePlay
+					close_menus = true;
+
+					playSound(Entity::SOUND_DIE);
+
+					//if (stats.permadeath) {
+						// ignore death penalty on permadeath and instead delete the player's saved game
+						//stats.death_penalty = false;
+						//Utils::removeSaveDir(save_load->getGameSlot());
+						//menu->exit->disableSave();
+
+						//logMsg(Utils::substituteVarsInString(msg->get("You are defeated. Game over! ${INPUT_CONTINUE} to exit to Title."), this), MSG_NORMAL);
+					//}
+					//else {
+						// raise the death penalty flag.  This is handled in MenuInventory
+						//stats.death_penalty = true;
+
+						//logMsg(Utils::substituteVarsInString(msg->get("You are defeated. ${INPUT_CONTINUE} to continue."), this), MSG_NORMAL);
+					//}
+
+					// if the player is attacking, we need to block further input
+					//if (inpt->pressing[Input::MAIN1])
+						//inpt->lock[Input::MAIN1] = true;
+				}
+
+				if (activeAnimation->getTimesPlayed() >= 1 || activeAnimation->getName() != "die") {
+					stats.corpse = true;
+				}
+
+				// allow respawn with Accept if not permadeath
+				/*
+				if ((inpt->pressing[Input::ACCEPT] || (settings->touchscreen && inpt->pressing[Input::MAIN1] && !inpt->lock[Input::MAIN1])) && stats.corpse) {
+					if (inpt->pressing[Input::ACCEPT]) inpt->lock[Input::ACCEPT] = true;
+					if (settings->touchscreen && inpt->pressing[Input::MAIN1]) inpt->lock[Input::MAIN1] = true;
+					mapr->teleportation = true;
+					mapr->teleport_mapname = mapr->respawn_map;
+					if (stats.permadeath) {
+						// set these positions so it doesn't flash before jumping to Title
+						mapr->teleport_destination.x = stats.pos.x;
+						mapr->teleport_destination.y = stats.pos.y;
+					}
+					else {
+						respawn = true;
+
+						// set teleportation variables.  GameEngine acts on these.
+						mapr->teleport_destination.x = mapr->respawn_point.x;
+						mapr->teleport_destination.y = mapr->respawn_point.y;
+					}
+				}*/
+
+				break;
+
+			default:
+				break;
+		}
+	}
+
+	// make the current square solid
+	mapr->collider.block(stats.pos.x, stats.pos.y, !MapCollision::IS_ALLY);
+}
+
+
 
 void Avatar::transform() {
 	// calling a transform power locks the actionbar, so we unlock it here

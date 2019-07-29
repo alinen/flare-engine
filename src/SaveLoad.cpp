@@ -271,6 +271,10 @@ void SaveLoad::loadGame() {
 				pc->stats.gfx_base = Parse::popFirstString(infile.val);
 				pc->stats.gfx_head = Parse::popFirstString(infile.val);
 				pc->stats.gfx_portrait = Parse::popFirstString(infile.val);
+
+				pcRemote->stats.gfx_base = pc->stats.gfx_base; 
+				pcRemote->stats.gfx_head = pc->stats.gfx_head; 
+				pcRemote->stats.gfx_portrait = pc->stats.gfx_portrait; 
 			}
 			else if (infile.key == "class") {
 				pc->stats.character_class = Parse::popFirstString(infile.val);

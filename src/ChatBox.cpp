@@ -31,7 +31,7 @@ FLARE.  If not, see http://www.gnu.org/licenses/
 #include "MenuInventory.h"
 #include "MenuManager.h"
 #include "ChatBox.h"
-#include "ChatClient.h"
+#include "NetClient.h"
 #include "GetText.h"
 #include "MenuVendor.h"
 #include "MessageEngine.h"
@@ -167,8 +167,6 @@ void ChatBox::chatrender(){
 		y = y + line_size.y;
   }
 	align();
-
-	std::cout << "****************\n";
 }
 void ChatBox::render() {
 	 if (!visible) return;

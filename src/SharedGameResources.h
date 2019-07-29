@@ -36,6 +36,7 @@ class PowerManager;
 *  so can be accessed safely anywhere in between. The objects must not be changed by any other class.
 */
 extern Avatar *pc;
+extern Avatar *pcRemote;
 extern CampaignManager *camp;
 extern EnemyGroupManager *enemyg;
 extern EnemyManager *enemym;

@@ -19,7 +19,7 @@
 #include <steam/steam_api.h>
 #endif
 
-#include "ChatClient.h"
+#include "NetClient.h"
 #include <string>
 #include <iostream>
 #include <unistd.h>
@@ -27,15 +27,6 @@
 
 SteamNetworkingMicroseconds g_logTimeZero;
 const uint16 DEFAULT_SERVER_PORT = 27020;
-
-static void NukeProcess( int rc )
-{
-    #ifdef WIN32
-        ExitProcess( rc );
-    #else
-        kill( getpid(), SIGKILL );
-    #endif
-}
 
 static void DebugOutput( ESteamNetworkingSocketsDebugOutputType eType, const char *pszMsg )
 {
@@ -46,7 +37,6 @@ static void DebugOutput( ESteamNetworkingSocketsDebugOutputType eType, const cha
     {
         fflush(stdout);
         fflush(stderr);
-        //ASN MOD: NukeProcess(1);
     }
 }
 
@@ -118,13 +108,13 @@ static void ShutdownSteamDatagramConnectionSockets(){
 }
 
 
-class ValveChatClient : private ISteamNetworkingSocketsCallbacks
+class ValveNetClient : private ISteamNetworkingSocketsCallbacks
 {
 public:
-  ValveChatClient() : m_bQuit(false), m_pInterface(NULL) {
+  ValveNetClient() : m_bQuit(false), m_pInterface(NULL) {
   }
 
-  virtual ~ValveChatClient() {
+  virtual ~ValveNetClient() {
     m_pInterface->CloseConnection( m_hConnection, 0, "Goodbye", true );
     m_hConnection = k_HSteamNetConnection_Invalid;
   }
@@ -155,17 +145,16 @@ public:
     }
   }
 
-  std::vector<std::string> getRemoteChat(){
+  const std::vector<std::string>& getRemoteChat() const{
     return remoteMessages;
   }
 
 private:
 
   std::vector<std::string> remoteMessages;
-    HSteamNetConnection m_hConnection;
-    ISteamNetworkingSockets *m_pInterface;
+  HSteamNetConnection m_hConnection;
   bool m_bQuit;
-
+  ISteamNetworkingSockets *m_pInterface;
 
     void PollIncomingMessages()
     {
@@ -257,7 +246,7 @@ private:
 };
 
 
-ChatClient::ChatClient(int ID, std::string name){
+NetClient::NetClient(int ID, std::string name){
  this->player_id = ID;
  this->player_name = name;
 
@@ -265,34 +254,31 @@ ChatClient::ChatClient(int ID, std::string name){
  addrServer.ParseString("127.0.0.1");
  addrServer.m_port = DEFAULT_SERVER_PORT;
  InitSteamDatagramConnectionSockets();
- client = new ValveChatClient();
+ client = new ValveNetClient();
  client->Start(addrServer);
 }
 
-ChatClient::~ChatClient(){
+NetClient::~NetClient(){
   delete client;
   ShutdownSteamDatagramConnectionSockets();
 }
 
-void ChatClient::logic(){
+void NetClient::logic(){
   client->Tick();
 }
 
-std::string ChatClient::postMessage(std::string message){
+void NetClient::postMessage(std::string message){
   client->SendMessage(message);
-  return message;
 }
 
-std::vector<std::string> ChatClient::getRemoteChat(){
+const std::vector<std::string>& NetClient::getRemoteChat() const{
   return client->getRemoteChat();
 }
-std::string ChatClient::recieveMessage(std::string sender, std::string message){
-  return message;
-}
-int ChatClient::ID(){
+
+int NetClient::ID() const{
   return this->player_id;
 }
 
-std::string ChatClient::name(){
+const std::string& NetClient::name() const{
   return this->player_name;
 }

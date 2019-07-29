@@ -28,7 +28,7 @@ FLARE.  If not, see http://www.gnu.org/licenses/
 #include "Utils.h"
 #include "Widget.h"
 #include "Menu.h"
-#include "ChatClient.h"
+#include "NetClient.h"
 #include "WidgetScrollBar.h"
 #include "WidgetScrollBox.h"
 #include "WidgetInput.h"
@@ -37,7 +37,6 @@ class WidgetButton;
 class WidgetLabel;
 class WidgetScrollBox;
 class WidgetInput;
-class ChatClient;
 
 class ChatBox : public Menu {
 private:
@@ -64,7 +63,7 @@ private:
 	Color trade_color_pressed;
 
 	std::vector<std::string> input_lines;
-	ChatClient client1;
+	NetClient client1;
 	
 public:
 	explicit ChatBox();

@@ -34,6 +34,7 @@ FLARE.  If not, see http://www.gnu.org/licenses/
 class Entity;
 class Hazard;
 class StatBlock;
+struct PlayerMessage;
 
 class ActionData {
 public:
@@ -51,7 +52,7 @@ public:
 };
 
 class Avatar : public Entity {
-private:
+public:
 	class Step_sfx {
 	public:
 		std::string id;
@@ -103,6 +104,7 @@ public:
 	void loadStepFX(const std::string& stepname);
 
 	void logic(std::vector<ActionData> &action_queue, bool restrict_power_use);
+	void logic(const PlayerMessage& netmsg);
 
 	// transformation handling
 	bool isTransforming() {

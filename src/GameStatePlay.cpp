@@ -99,6 +99,7 @@ GameStatePlay::GameStatePlay()
   powers = new PowerManager();
   mapr = new MapRenderer();
   pc = new Avatar();
+  pcRemote = new Avatar();
   enemym = new EnemyManager();
   enemyg = new EnemyGroupManager();
   hazards = new HazardManager();
@@ -139,6 +140,9 @@ void GameStatePlay::resetGame() {
   menu->talker->setHero(pc->stats);
   pc->loadSounds();
 
+  // Init remote character
+  pcRemote->init();
+
   mapr->executeOnLoadEvents();
 }
 
@@ -159,18 +163,18 @@ void GameStatePlay::checkEnemyFocus() {
   // check the last hit enemy first
   // if there's none, then either get the nearest enemy or one under the mouse (depending on mouse mode)
   if (!inpt->usingMouse()) {
-  if (hazards->last_enemy) {
-  if (enemy == hazards->last_enemy) {
-  if (!menu->enemy->timeout.isEnd() && hazards->last_enemy->stats.hp > 0)
-  return;
-  else
-  hazards->last_enemy = NULL;
-  }
-  enemy = hazards->last_enemy;
-  }
-  else {
-  enemy = enemym->getNearestEnemy(pc->stats.pos, !EnemyManager::GET_CORPSE, NULL, eset->misc.interact_range);
-  }
+    if (hazards->last_enemy) {
+      if (enemy == hazards->last_enemy) {
+        if (!menu->enemy->timeout.isEnd() && hazards->last_enemy->stats.hp > 0)
+          return;
+        else
+          hazards->last_enemy = NULL;
+      }
+      enemy = hazards->last_enemy;
+    }
+    else {
+      enemy = enemym->getNearestEnemy(pc->stats.pos, !EnemyManager::GET_CORPSE, NULL, eset->misc.interact_range);
+    }
   }
   else {
   if (hazards->last_enemy) {
@@ -591,9 +595,12 @@ void GameStatePlay::checkEquipmentChange() {
   }
   assert(pc->layer_reference_order.size()==img_gfx.size());
   pc->loadGraphics(img_gfx);
+  pcRemote->loadGraphics(img_gfx);
 
-  if (feet_index != -1)
-  pc->loadStepFX(items->items[menu->inv->inventory[MenuInventory::EQUIPMENT][feet_index].item].stepfx);
+    if (feet_index != -1) {
+      pc->loadStepFX(items->items[menu->inv->inventory[MenuInventory::EQUIPMENT][feet_index].item].stepfx);
+      pcRemote->loadStepFX(items->items[menu->inv->inventory[MenuInventory::EQUIPMENT][feet_index].item].stepfx);
+    }
   }
 
   menu->inv->changed_equipment = false;
@@ -849,31 +856,38 @@ void GameStatePlay::logic() {
   menu->logic();
 
   if (!isPaused()) {
-  if (!second_timer.isEnd())
-  second_timer.tick();
+    if (!second_timer.isEnd())
+    second_timer.tick();
   else {
-  pc->time_played++;
-  second_timer.reset(Timer::BEGIN);
+    pc->time_played++;
+    second_timer.reset(Timer::BEGIN);
   }
 
   // these actions only occur when the game isn't paused
   if (pc->stats.alive) checkLoot();
   checkEnemyFocus();
   if (pc->stats.alive) {
-  mapr->checkHotspots();
-  mapr->checkNearestEvent();
-  checkNPCInteraction();
+    mapr->checkHotspots();
+    mapr->checkNearestEvent();
+    checkNPCInteraction();
   }
   checkTitle();
 
   menu->act->checkAction(action_queue);
   pc->logic(action_queue, restrictPowerUse());
+  pcRemote->logic(action_queue, restrictPowerUse());
+
+  // Test: position remote pc based on local pc
+  pcRemote->stats.pos = pc->stats.pos;
+  pcRemote->stats.pos.x += 2;
+  pcRemote->stats.pos.y += 2;
+  std::cout << "POS: "<< pc->stats.pos.x << " " << pc->stats.pos.y << std::endl;
 
   // Transform powers change the actionbar layout,
   // so we need to prevent accidental clicks if a new power is placed under the slot we clicked on.
   // It's a bit hacky, but it works
   if (pc->isTransforming()) {
-  menu->act->resetSlots();
+    menu->act->resetSlots();
   }
 
   // transfer hero data to enemies, for AI use
@@ -1019,6 +1033,7 @@ void GameStatePlay::render() {
   std::vector<Renderable> rens_dead;
 
   pc->addRenders(rens);
+  pcRemote->addRenders(rens);
 
   enemym->addRenders(rens, rens_dead);
 
@@ -1105,6 +1120,7 @@ GameStatePlay::~GameStatePlay() {
   delete hazards;
   delete enemym;
   delete pc;
+  delete pcRemote;
   delete mapr;
   delete menu;
   delete loot;
@@ -1116,6 +1132,7 @@ GameStatePlay::~GameStatePlay() {
 
   // NULL-ify shared game resources
   pc = NULL;
+  pcRemote = NULL;
   menu = NULL;
   camp = NULL;
   enemyg = NULL;
