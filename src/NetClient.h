@@ -4,22 +4,6 @@
 
 #include <string>
 
-struct ChatMessage
-{
-  char type; // '0' or '1'
-  char padding[7];
-  char message[1024];
-};
-
-struct PlayerMessage
-{
-  char type; // '0' or '1'
-  char padding[7];
-  float x;
-  float y;
-  float z;
-};
-
 class ValveNetClient;
 class NetClient {
 public:

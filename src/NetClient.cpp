@@ -140,12 +140,8 @@ public:
 
   void SendMessage(const std::string& cmd)  {
     if (m_pInterface && m_hConnection != k_HSteamNetConnection_Invalid ) {
-        ChatMessage cmsg;
-        cmsg.type = '0';
-        strncpy(cmsg.message, cmd.c_str(), std::min<int>(1024, (int) cmd.size()));
-        std::cout << "TEST POST MSG: " << cmsg.message << std::endl;
         m_pInterface->SendMessageToConnection( m_hConnection,
-        (void*) &cmsg, (uint32) sizeof(ChatMessage), k_nSteamNetworkingSend_Reliable );
+            cmd.c_str(), (uint32) cmd.length(), k_nSteamNetworkingSend_Reliable );
     }
   }
 
@@ -173,17 +169,16 @@ private:
             if ( numMsgs < 0 )
                 FatalError( "Error checking for messages" );
 
+            // '\0'-terminate it to make it easier to parse
+            std::string sCmd;
+            sCmd.assign( (const char *)pIncomingMsg->m_pData, pIncomingMsg->m_cbSize );
+
             // Just echo anything we get from the server
-            ChatMessage cmsg;
-            memcpy((void*) &cmsg, pIncomingMsg->m_pData, sizeof(ChatMessage));
-            std::cout << "TEST RECEIVE: " << cmsg.message << std::endl;
-            std::cout << "TEST RECEIVE: " << strlen(cmsg.message) << std::endl;
-            
-            fwrite( cmsg.message, 1, strlen(cmsg.message), stdout );
+            fwrite( sCmd.c_str(), 1, sCmd.length(), stdout);
             fputc( '\n', stdout );
 
             // We don't need this anymore.
-            remoteMessages.push_back(cmsg.message);
+            remoteMessages.push_back(sCmd);
             pIncomingMsg->Release();
         }
     }
