@@ -145,13 +145,28 @@ public:
     }
   }
 
+  void SendData(const FPoint& pos){
+    if (m_pInterface && m_hConnection != k_HSteamNetConnection_Invalid ) {
+
+        char cmd[1024];
+        snprintf(cmd, 1024, "/data %f,%f", pos.x, pos.y); // TODO: Manage names
+        m_pInterface->SendMessageToConnection( m_hConnection,
+            cmd, (uint32) strlen(cmd), k_nSteamNetworkingSend_Reliable );
+    }
+  }
+
   const std::vector<std::string>& getRemoteChat() const{
     return remoteMessages;
+  }
+
+  FPoint getRemoteData() const{
+    return remoteData;
   }
 
 private:
 
   std::vector<std::string> remoteMessages;
+  FPoint remoteData;
   HSteamNetConnection m_hConnection;
   bool m_bQuit;
   ISteamNetworkingSockets *m_pInterface;
@@ -173,12 +188,21 @@ private:
             std::string sCmd;
             sCmd.assign( (const char *)pIncomingMsg->m_pData, pIncomingMsg->m_cbSize );
 
-            // Just echo anything we get from the server
-            fwrite( sCmd.c_str(), 1, sCmd.length(), stdout);
-            fputc( '\n', stdout );
+            if (strncmp(sCmd.c_str(), "/data", 5) == 0)
+            {
+                float x, y;
+                sscanf(sCmd.c_str(), "%f,%f", &x, &y);
+                remoteData.x = x;
+                remoteData.y = y;
 
-            // We don't need this anymore.
-            remoteMessages.push_back(sCmd);
+            }
+            else
+            {
+                // Just echo anything we get from the server
+                //fwrite( sCmd.c_str(), 1, sCmd.length(), stdout);
+                //fputc( '\n', stdout );
+                remoteMessages.push_back(sCmd);
+            }
             pIncomingMsg->Release();
         }
     }
@@ -272,8 +296,16 @@ void NetClient::postMessage(std::string message){
   client->SendMessage(message);
 }
 
+void NetClient::postData(const FPoint& pos){
+  client->SendData(pos);
+}
+
 const std::vector<std::string>& NetClient::getRemoteChat() const{
   return client->getRemoteChat();
+}
+
+FPoint NetClient::getRemoteData() const{
+  return client->getRemoteData();
 }
 
 int NetClient::ID() const{

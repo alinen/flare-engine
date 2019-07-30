@@ -114,8 +114,7 @@ Set (FLARE_SOURCES
 	./src/Avatar.cpp
 	./src/BehaviorStandard.cpp
 	./src/CampaignManager.cpp
-  ./src/ChatBox.cpp
-  ./src/NetClient.cpp
+    ./src/ChatBox.cpp
 	./src/CombatText.cpp
 	./src/CursorManager.cpp
 	./src/DeviceList.cpp
@@ -154,7 +153,7 @@ Set (FLARE_SOURCES
 	./src/Menu.cpp
 	./src/MenuActionBar.cpp
 	./src/MenuActiveEffects.cpp
-	 ./src/MenuBook.cpp
+	./src/MenuBook.cpp
 	./src/MenuCharacter.cpp
 	./src/MenuConfirm.cpp
 	./src/MenuDevConsole.cpp
@@ -172,13 +171,14 @@ Set (FLARE_SOURCES
 	./src/MenuStatBar.cpp
 	./src/MenuTalker.cpp
 	./src/MenuTouchControls.cpp
-	 ./src/MenuVendor.cpp
+	./src/MenuVendor.cpp
 	./src/MessageEngine.cpp
 	./src/ModManager.cpp
+	./src/NetClient.cpp
 	./src/NPC.cpp
 	./src/NPCManager.cpp
 	./src/PowerManager.cpp
-	 ./src/QuestLog.cpp
+	./src/QuestLog.cpp
 	./src/RenderDevice.cpp
 	./src/SaveLoad.cpp
 	./src/SDLInputState.cpp
@@ -214,7 +214,6 @@ Set (FLARE_SOURCES
 	./src/WidgetSlot.cpp
  	./src/WidgetTabControl.cpp
 	./src/WidgetTooltip.cpp
-	./src/main.cpp
 )
 
 Set (FLARE_HEADERS
@@ -228,8 +227,7 @@ Set (FLARE_HEADERS
 	./src/Avatar.h
 	./src/BehaviorStandard.h
 	./src/CampaignManager.h
-  ./src/ChatBox.h
-  ./src/NetClient.h
+	./src/ChatBox.h
 	./src/CombatText.h
 	./src/CommonIncludes.h
 	./src/CursorManager.h
@@ -290,6 +288,7 @@ Set (FLARE_HEADERS
 	./src/MenuVendor.h
 	./src/MessageEngine.h
 	./src/ModManager.h
+	./src/NetClient.h
 	./src/NPC.h
 	./src/NPCManager.h
 	./src/PowerManager.h
@@ -339,9 +338,9 @@ IF (WIN32)
     )
 ENDIF (WIN32)
 
-Add_Executable (flare ${FLARE_SOURCES} ${FLARE_HEADERS})
-Add_Executable (netsend  ./src/NetSendMain.cpp ./src/NetClient.h ./src/NetClient.cpp)
-Add_Executable (netreceive  ./src/NetReceiveMain.cpp ./src/NetClient.h ./src/NetClient.cpp)
+Add_Executable (flare ./src/main.cpp ${FLARE_SOURCES} ${FLARE_HEADERS})
+Add_Executable (netsend  ./src/NetSendMain.cpp ${FLARE_SOURCES} ${FLARE_HEADERS})
+Add_Executable (netreceive  ./src/NetReceiveMain.cpp ${FLARE_SOURCES})
 
 
 # libSDLMain comes with libSDL if needed on certain platforms
@@ -349,9 +348,9 @@ If (NOT SDL2MAIN_LIBRARY)
   Set (SDL2MAIN_LIBRARY "")
 EndIf (NOT SDL2MAIN_LIBRARY)
 
-Target_Link_Libraries (flare ${CMAKE_LD_FLAGS} ${SDL2_LIBRARY} ${SDL2IMAGE_LIBRARY} ${SDL2MIXER_LIBRARY} ${SDL2TTF_LIBRARY} ${SDL2MAIN_LIBRARY} ${NETWORK_LIBRARIES})
-Target_Link_Libraries(netsend ${NETWORK_LIBRARIES} )
-Target_Link_Libraries(netreceive ${NETWORK_LIBRARIES} )
+Target_Link_Libraries(flare      ${CMAKE_LD_FLAGS} ${SDL2_LIBRARY} ${SDL2IMAGE_LIBRARY} ${SDL2MIXER_LIBRARY} ${SDL2TTF_LIBRARY} ${SDL2MAIN_LIBRARY} ${NETWORK_LIBRARIES})
+Target_Link_Libraries(netsend    ${CMAKE_LD_FLAGS} ${SDL2_LIBRARY} ${SDL2IMAGE_LIBRARY} ${SDL2MIXER_LIBRARY} ${SDL2TTF_LIBRARY} ${SDL2MAIN_LIBRARY} ${NETWORK_LIBRARIES} )
+Target_Link_Libraries(netreceive ${CMAKE_LD_FLAGS} ${SDL2_LIBRARY} ${SDL2IMAGE_LIBRARY} ${SDL2MIXER_LIBRARY} ${SDL2TTF_LIBRARY} ${SDL2MAIN_LIBRARY} ${NETWORK_LIBRARIES} )
 
 # installing to the proper places
 install(PROGRAMS
