@@ -23,6 +23,7 @@ FLARE.  If not, see http://www.gnu.org/licenses/
 #include "LootManager.h"
 #include "MenuActionBar.h"
 #include "MenuPowers.h"
+#include "NetClient.h"
 #include "PowerManager.h"
 #include "SharedGameResources.h"
 
@@ -38,4 +39,5 @@ LootManager *loot = NULL;
 MapRenderer *mapr = NULL;
 MenuActionBar *menu_act= NULL;
 MenuPowers *menu_powers = NULL;
+NetClient *netclient = NULL;
 PowerManager *powers = NULL;

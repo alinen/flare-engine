@@ -57,7 +57,6 @@ ChatBox::ChatBox()
 	, trade_color_normal(font->getColor(FontEngine::COLOR_MENU_BONUS))
 	, trade_color_hover(font->getColor(FontEngine::COLOR_WIDGET_NORMAL))
 	, trade_color_pressed(font->getColor(FontEngine::COLOR_WIDGET_DISABLED))
-	, client1(0, "Foobar")
  {
 
 	setBackground("images/menus/dialog_box.png");
@@ -107,7 +106,8 @@ ChatBox::ChatBox()
 	label_name->setText("CHAT");
 	label_name->setFont(font_who);
 	input_name = new WidgetInput(WidgetInput::DEFAULT_FILE);
-	input_name->max_length = 20;
+	input_name->accept_to_defocus = true;
+	input_name->max_length = 100;
 	input_name->setBasePos(text_pos.x, text_pos.y + text_offset.y, Utils::ALIGN_BOTTOMLEFT);
 	textbox = new WidgetScrollBox(text_pos.w, 500);//text_pos.h-(text_offset.y*2));
 	textbox->setBasePos(text_pos.x, text_pos.y + text_offset.y, Utils::ALIGN_TOPLEFT);
@@ -132,15 +132,14 @@ void ChatBox::logic() {
 	if (!input_name->edit_mode){
 		tablist.logic();
 	}
+	textbox->logic();
  	input_name->logic();
-	if (inpt->pressing[Input::ACCEPT] && !inpt->lock[Input::ACCEPT]){
-		inpt->lock[Input::ACCEPT] = true;
-		client1.postMessage(input_name->getText());
+	if (input_name->has_text) {
+		netclient->postMessage(input_name->getText());
 		input_lines.push_back(input_name->getText());
 		//confirm_clicked = true;
 	}
-	client1.logic();
-	std::vector<std::string> remote_chats = client1.getRemoteChat();
+	std::vector<std::string> remote_chats = netclient->getRemoteChat();
 	for (int i = 0; i < remote_chats.size(); i++)
 	{
 		input_lines.push_back(remote_chats[i]);
@@ -153,7 +152,7 @@ void ChatBox::chatrender(){
 	 int y = 0;
 	 for (int i = 0; i < input_lines.size(); i++)
 	 {
-		 std::cout << input_lines[i] << std::endl;
+		 //std::cout << "RECEIVE: " << input_lines[i] << std::endl;
 		Point line_size = font->calc_size(input_lines[i],textbox->pos.w-(text_offset.x*2));
 		font->render(
 			input_lines[i],
@@ -188,8 +187,6 @@ void ChatBox::render() {
 	setBackgroundClip(src);
 	setBackgroundDest(dest);
 	Menu::render();
-  chatrender();
-
 
 	// name & dialog text
 	label_name->render();
@@ -198,6 +195,7 @@ void ChatBox::render() {
 		textbox->refresh();
 	}
 	textbox->render();
+    chatrender();
 
 //	WidgetInput.loadGraphics();
  }

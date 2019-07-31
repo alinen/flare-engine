@@ -104,7 +104,7 @@ public:
 	void loadStepFX(const std::string& stepname);
 
 	void logic(std::vector<ActionData> &action_queue, bool restrict_power_use);
-	void logic(const PlayerMessage& netmsg);
+	void logic();
 
 	// transformation handling
 	bool isTransforming() {

@@ -18,7 +18,7 @@ public:
   int ID() const;
   const std::string& name() const;
   const std::vector<std::string>& getRemoteChat() const;
-  FPoint getRemoteData() const;
+  const FPoint& getRemoteData() const;
 
 private:
   int player_id;

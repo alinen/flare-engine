@@ -47,10 +47,7 @@ int main(){
     }
 
     FPoint pos = client1.getRemoteData();
-    for (unsigned int i = 0; i < msgs.size(); i++)
-    {
-      cout << "DATA: " << pos.x << " " << pos.y << endl;
-    }
+    cout << "DATA: " << pos.x << " " << pos.y << endl;
   }
 
   return 0;

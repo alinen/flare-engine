@@ -62,6 +62,7 @@ FLARE.  If not, see http://www.gnu.org/licenses/
 #include "MenuTalker.h"
 #include "MenuVendor.h"
 #include "ModManager.h"
+#include "NetClient.h"
 #include "NPC.h"
 #include "NPCManager.h"
 #include "PowerManager.h"
@@ -106,6 +107,7 @@ GameStatePlay::GameStatePlay()
   menu = new MenuManager();
   npcs = new NPCManager();
   quests = new QuestLog(menu->questlog);
+  netclient = new NetClient(0, "TodoName");
 
   // load the config file for character titles
   loadTitles();
@@ -846,6 +848,9 @@ void GameStatePlay::updateActionBar(unsigned index) {
  * This includes some message passing between child object
  */
 void GameStatePlay::logic() {
+
+  netclient->logic();
+
   if (inpt->window_resized)
   refreshWidgets();
 
@@ -875,13 +880,13 @@ void GameStatePlay::logic() {
 
   menu->act->checkAction(action_queue);
   pc->logic(action_queue, restrictPowerUse());
-  pcRemote->logic(action_queue, restrictPowerUse());
+  pcRemote->logic();
+  netclient->postData(pc->stats.pos);
 
   // Test: position remote pc based on local pc
-  pcRemote->stats.pos = pc->stats.pos;
-  pcRemote->stats.pos.x += 2;
-  pcRemote->stats.pos.y += 2;
-  std::cout << "POS: "<< pc->stats.pos.x << " " << pc->stats.pos.y << std::endl;
+  pcRemote->stats.pos.x = netclient->getRemoteData().x;
+  pcRemote->stats.pos.y = netclient->getRemoteData().y;
+  //std::cout << "POS: "<< pcRemote->stats.pos.x << " " << pcRemote->stats.pos.y << std::endl;
 
   // Transform powers change the actionbar layout,
   // so we need to prevent accidental clicks if a new power is placed under the slot we clicked on.
@@ -1127,6 +1132,7 @@ GameStatePlay::~GameStatePlay() {
   delete camp;
   delete items;
   delete powers;
+  delete netclient;
 
   delete enemyg;
 
@@ -1143,4 +1149,5 @@ GameStatePlay::~GameStatePlay() {
   menu_act = NULL;
   menu_powers = NULL;
   powers = NULL;
+  netclient = NULL;
 }

@@ -22,6 +22,7 @@
 #include "NetClient.h"
 #include <string>
 #include <iostream>
+#include <sstream>
 #include <unistd.h>
 #include <signal.h>
 
@@ -112,6 +113,8 @@ class ValveNetClient : private ISteamNetworkingSocketsCallbacks
 {
 public:
   ValveNetClient() : m_bQuit(false), m_pInterface(NULL) {
+    remoteData.x = 20;
+    remoteData.y = 20;
   }
 
   virtual ~ValveNetClient() {
@@ -159,7 +162,7 @@ public:
     return remoteMessages;
   }
 
-  FPoint getRemoteData() const{
+  const FPoint& getRemoteData() const{
     return remoteData;
   }
 
@@ -188,10 +191,13 @@ private:
             std::string sCmd;
             sCmd.assign( (const char *)pIncomingMsg->m_pData, pIncomingMsg->m_cbSize );
 
-            if (strncmp(sCmd.c_str(), "/data", 5) == 0)
+            size_t idx = sCmd.find("/data");
+            if (idx != std::string::npos)
             {
                 float x, y;
-                sscanf(sCmd.c_str(), "%f,%f", &x, &y);
+                std::vector<std::string> tokens = split(sCmd.substr(idx+5, std::string::npos), ',');
+                x = ::atof(tokens[0].c_str());
+                y = ::atof(tokens[1].c_str());
                 remoteData.x = x;
                 remoteData.y = y;
 
@@ -205,6 +211,17 @@ private:
             }
             pIncomingMsg->Release();
         }
+    }
+
+    std::vector<std::string> split(const std::string &s, char delim) {
+      std::stringstream ss(s);
+      std::string item;
+      std::vector<std::string> elems;
+      while (std::getline(ss, item, delim)) {
+        elems.push_back(item);
+        // elems.push_back(std::move(item)); // if C++11 (based on comment from @mchiasson)
+      }
+      return elems;
     }
 
     void PollConnectionStateChanges()	{
@@ -304,7 +321,7 @@ const std::vector<std::string>& NetClient::getRemoteChat() const{
   return client->getRemoteChat();
 }
 
-FPoint NetClient::getRemoteData() const{
+const FPoint& NetClient::getRemoteData() const{
   return client->getRemoteData();
 }
 

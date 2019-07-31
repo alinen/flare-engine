@@ -28,7 +28,6 @@ FLARE.  If not, see http://www.gnu.org/licenses/
 #include "Utils.h"
 #include "Widget.h"
 #include "Menu.h"
-#include "NetClient.h"
 #include "WidgetScrollBar.h"
 #include "WidgetScrollBox.h"
 #include "WidgetInput.h"
@@ -63,7 +62,6 @@ private:
 	Color trade_color_pressed;
 
 	std::vector<std::string> input_lines;
-	NetClient client1;
 	
 public:
 	explicit ChatBox();
